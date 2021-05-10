@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "323323242270",
+    "firebase_url": "https://appchat-c2f80-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "appchat-c2f80",
+    "storage_bucket": "appchat-c2f80.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323323242270:android:0bbdd7391e62cc5abf0b0f",
+        "android_client_info": {
+          "package_name": "com.ducanh.appchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323323242270-0qts5i5p2cndufuk9ucecjqel3ieel8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCselhwKCC0o5tBw7JdixcbHkwomSX-cRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323323242270-0qts5i5p2cndufuk9ucecjqel3ieel8j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
