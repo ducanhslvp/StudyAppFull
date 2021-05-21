@@ -37,10 +37,11 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
-            app:tabSelectedTextColor="@color/teal_700"
-            app:tabIndicator="@color/white"
-            app:tabTextColor="#ECF1F1" />
+            app:tabBackground="@color/red2"
+            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorHeight="5dp"
+            app:tabIndicatorColor="@color/white"
+            app:tabTextColor="@color/white"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

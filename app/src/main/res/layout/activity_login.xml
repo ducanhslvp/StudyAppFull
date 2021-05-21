@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:ems="10"
+        android:background="@color/background"
         android:hint="Email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
+        android:background="@color/background"
         android:ems="10"
         android:hint="iiii"
         android:inputType="textPassword"
@@ -41,6 +43,8 @@
 
     <Button
         android:id="@+id/btn_login"
+        android:background="@color/btnsucces"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="304dp"
