@@ -161,10 +161,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        System.out.println("Co chay vao cai nay+++++++++++++++++");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==IMAGE_REQUEST && requestCode==RESULT_OK && data!=null
             && data.getData()!=null){
             imageUri =data.getData();
+            uploadImage();
             if (uploadTask!=null && uploadTask.isInProgress()){
                 Toast.makeText(ProfileActivity.this,"Upload in preogress",Toast.LENGTH_SHORT).show();
             }else {

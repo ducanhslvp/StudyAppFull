@@ -22,9 +22,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.ducanh.appchat.adapter.FargmentNavigationAdapter;
 import com.ducanh.appchat.fragments.ChatsFragment;
 import com.ducanh.appchat.fragments.UsersFragment;
 import com.ducanh.appchat.model.User;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,8 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView profileImage;
     private TextView username;
 
+    private BottomNavigationView navigationView;
+    private ViewPager viewPager;
+    private FargmentNavigationAdapter adapter;
+
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +88,47 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        TabLayout tabLayout=findViewById(R.id.tab_layout);
         ViewPager viewPager=findViewById(R.id.view_pager);
+        navigationView=findViewById(R.id.navigation);
 
-        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new ChatsFragment(),"Chat");
-        viewPagerAdapter.addFragment(new UsersFragment(),"User");
+        adapter=new FargmentNavigationAdapter(getSupportFragmentManager(),
+                FargmentNavigationAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(adapter);
+        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_home:viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.menu_oke:viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.menu_chat:viewPager.setCurrentItem(2);
+                        break;
+                }
+                return true;
+            }
+        });
+//        reference=FirebaseDatabase.getInstance().getReference("Chats");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull @org.jetbrains.annotations.NotNull DataSnapshot snapshot) {
+//                int unread=0;
+//                for (DataSnapshot snapshot1:snapshot.getChildren())
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull @org.jetbrains.annotations.NotNull DatabaseError error) {
+//
+//            }
+//        })
 
-        viewPager.setAdapter(viewPagerAdapter);
-
-        tabLayout.setupWithViewPager(viewPager);
+//        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
+//        viewPagerAdapter.addFragment(new ChatsFragment(),"Chat");
+//        viewPagerAdapter.addFragment(new UsersFragment(),"User");
+//
+//        viewPager.setAdapter(viewPagerAdapter);
+//
+//        tabLayout.setupWithViewPager(viewPager);
     }
 
 
@@ -116,37 +154,37 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-    class ViewPagerAdapter extends FragmentPagerAdapter{
-        private ArrayList<Fragment> fragments;
-        private ArrayList<String> titles;
-
-        ViewPagerAdapter(FragmentManager fragmentManager){
-            super(fragmentManager);
-            this.fragments=new ArrayList<>();
-            this.titles=new ArrayList<>();
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-        public  void addFragment(Fragment fragment,String title){
-            fragments.add(fragment);
-            titles.add(title);
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
-        }
-    }
+//    class ViewPagerAdapter extends FragmentPagerAdapter{
+//        private ArrayList<Fragment> fragments;
+//        private ArrayList<String> titles;
+//
+//        ViewPagerAdapter(FragmentManager fragmentManager){
+//            super(fragmentManager);
+//            this.fragments=new ArrayList<>();
+//            this.titles=new ArrayList<>();
+//        }
+//
+//        @NonNull
+//        @Override
+//        public Fragment getItem(int position) {
+//            return fragments.get(position);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return fragments.size();
+//        }
+//        public  void addFragment(Fragment fragment,String title){
+//            fragments.add(fragment);
+//            titles.add(title);
+//        }
+//
+//        @Nullable
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            return titles.get(position);
+//        }
+//    }
     private  void status(String status){
         reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         HashMap<String, Object> hashMap=new HashMap<>();
