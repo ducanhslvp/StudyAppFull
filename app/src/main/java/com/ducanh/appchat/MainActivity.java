@@ -150,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,ProfileActivity.class));
                 finish();
                 return true;
+            case R.id.addSubject:
+                startActivity(new Intent(MainActivity.this,AddSubjectActivity.class));
+                finish();
+                return true;
 
         }
         return false;

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.ducanh.appchat.R;
 import com.ducanh.appchat.adapter.UserAdapter;
-import com.ducanh.appchat.model.Chat;
 import com.ducanh.appchat.model.ChatList;
 import com.ducanh.appchat.model.User;
 import com.ducanh.appchat.notifications.Token;

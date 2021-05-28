@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.ducanh.appchat.fragments.ChatHomeFragment;
-import com.ducanh.appchat.fragments.CreatorFragment;
+import com.ducanh.appchat.fragments.StudyFragment;
 import com.ducanh.appchat.fragments.HomeFragment;
 
 public class FargmentNavigationAdapter extends FragmentStatePagerAdapter {
@@ -20,7 +20,7 @@ public class FargmentNavigationAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0: return new HomeFragment();
-            case 1: return new CreatorFragment();
+            case 1: return new StudyFragment();
             case 2: return new ChatHomeFragment();
             default: return new HomeFragment();
         }

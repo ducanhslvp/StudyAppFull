@@ -10,4 +10,8 @@
         android:id="@+id/profile"
         android:title="Tài khoản"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/addSubject"
+        android:title="Thêm đề bài"
+        app:showAsAction="never"/>
 </menu>
