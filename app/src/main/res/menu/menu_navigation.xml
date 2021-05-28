@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home"
+        android:id="@+id/menu_home"
+        android:icon="@drawable/ic_launcher_background"
+        />
+    <item android:title="Search"
+        android:id="@+id/menu_oke"
+        android:icon="@drawable/ic_launcher_background"
+        />
+    <item android:title="CHAT"
+        android:id="@+id/menu_chat"
+        android:icon="@drawable/ic_baseline_send_24"
+        />
+
+</menu>

@@ -1,8 +1,8 @@
 package com.ducanh.appchat.notifications;
 
 public class Sender {
-    private Data data;
-    private String to;
+    public Data data;
+    public String to;
 
     public Sender(Data data, String to) {
         this.data = data;

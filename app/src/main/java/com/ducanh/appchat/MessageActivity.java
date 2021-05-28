@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -80,7 +81,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        apiService= Client.getClient("https://fcm.googleis.com/").create(APIService.class);
+        apiService= Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         recyclerView=findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -97,12 +98,8 @@ public class MessageActivity extends AppCompatActivity {
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-
         intent=getIntent();
-
         userId=intent.getStringExtra("user");
-
-
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +178,7 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private void  sendNotification(String receiver, String username, String message ){
+    private void  sendNotification(String receiver,final String username,final String message ){
         DatabaseReference tokens=FirebaseDatabase.getInstance().getReference("Tokens");
         Query query=tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -189,7 +186,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snapshot1:snapshot.getChildren()){
                     Token token=snapshot1.getValue(Token.class);
-                    Data data=new Data(firebaseUser.getUid(),R.mipmap.ic_launcher,username+": "+message,"New Message",userId);
+                    Data data=new Data(firebaseUser.getUid(),R.mipmap.ic_launcher,username+": "
+                            +message,"New Message",userId);
 
                     Sender sender=new Sender(data,token.getToken());
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -241,6 +239,11 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
     }
+    private void currenUser(String userId){
+        SharedPreferences.Editor editor=getSharedPreferences("PREFS",MODE_PRIVATE).edit();
+        editor.putString("currentuser",userId);
+        editor.apply();
+    }
 
     private  void status(String status){
         reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
@@ -253,11 +256,13 @@ public class MessageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         status("online");
+        currenUser(userId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         status("offline");
+        currenUser("none");
     }
 }
