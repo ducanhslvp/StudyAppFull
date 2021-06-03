@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     int notificationId=1;
     SQLiteHelper sqLiteHelper;
     List<Noti> notiList= new ArrayList<>();
+    boolean check=true;
 
 
     @Override
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     profileImage.setImageResource(R.mipmap.ic_launcher);
 
                 } else{
-                    Glide.with(MainActivity.this).load(user.getImageURL()).into(profileImage);
+                    Glide.with(getBaseContext()).load(user.getImageURL()).into(profileImage);
                 }
             }
 
@@ -125,14 +126,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //----------------------------------------------
-
-
-//        try {
-//            System.out.println(sqLiteHelper.getDate()+"--------------------------");
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
 
         createNotificationChannel();
         new Thread(new Runnable() {
@@ -145,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if (checkTime()) {
-
+                    if (checkTime() && (check==true)) {
+                        check=false;
 
                         NotificationCompat.Builder builder =
                                 new NotificationCompat.Builder(MainActivity.this,CHANNEL_ID)

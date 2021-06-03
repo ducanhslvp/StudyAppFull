@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout4"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/background"
@@ -11,10 +12,10 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,41 +23,40 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
 
             <TextView
+                android:layout_marginLeft="30dp"
                 android:id="@+id/username"
+                android:gravity="center"
+                android:text="abcd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
+                android:textColor="@color/black"
                 android:textSize="20dp" />
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:orientation="vertical">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:background="@drawable/radius_bottomnavigation"
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="63dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_bottomnavigation"
         app:backgroundTint="@color/white"
         app:itemIconTint="@color/color_navigation"
         app:itemTextColor="@color/color_navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu_navigation" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
     private List<Test> listTest;
     public String[] listAnswer=new String[50];
     public boolean check;
+    int green=Color.GREEN;
 
     public TestAdapter(Context context, List<Test> listTest, boolean check) {
         this.context = context;
@@ -59,15 +60,15 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
                 String correct=listTest.get(position).getQuestion().getAnswer();
                 if (correct.equals("A")) {
 
-                    holder.radioA.setTextColor(Color.GREEN);
+                    holder.radioA.setTextColor(green);
                 }else
                 if (correct.equals("B")) {
 
-                    holder.radioB.setTextColor(Color.GREEN);
+                    holder.radioB.setTextColor(green);
                 }else
                 if (correct.equals("C")) {
 
-                    holder.radioC.setTextColor(Color.GREEN);
+                    holder.radioC.setTextColor(green);
                 }
                 //set dap an sai
                 String yourAnswer=listAnswer[position];
@@ -86,19 +87,19 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             }
             //set truong hop chon dung dap an
             else {
-                holder.txtQuestion.setTextColor(Color.GREEN);
+                holder.txtQuestion.setTextColor(green);
                 String correct=listTest.get(position).getQuestion().getAnswer();
                 if (correct.equals("A")) {
                     holder.radioA.setChecked(true);
-                    holder.radioA.setTextColor(Color.GREEN);
+                    holder.radioA.setTextColor(green);
                 }else
                 if (correct.equals("B")) {
                     holder.radioB.setChecked(true);
-                    holder.radioB.setTextColor(Color.GREEN);
+                    holder.radioB.setTextColor(green);
                 }else
                 if (correct.equals("C")) {
                     holder.radioC.setChecked(true);
-                    holder.radioC.setTextColor(Color.GREEN);
+                    holder.radioC.setTextColor(green);
                 }
             }
 

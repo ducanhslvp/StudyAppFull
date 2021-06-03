@@ -23,16 +23,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_home, container, false);
         btnTranslate=view.findViewById(R.id.btn_translate);
-        btn_ok=view.findViewById(R.id.btn_oke);
-
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent=new Intent(getContext(), LiveStreamActivity.class);
-//                startActivity(intent);
-            }
-        });
-
         btnTranslate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

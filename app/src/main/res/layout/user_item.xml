@@ -5,8 +5,8 @@
     android:padding="5dp"
     android:background="@drawable/radius_2"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    android:layout_marginLeft="5dp"
+    android:layout_margin="6dp"
+    android:layout_marginLeft="10dp"
     android:layout_marginRight="5dp"
     app:cardCornerRadius="10dp">
 
@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:layout_toEndOf="@id/profile_image"
         android:layout_toRightOf="@id/profile_image"
         android:text="username"
@@ -61,17 +61,20 @@
         android:layout_toEndOf="@id/profile_image"/>
 
     <TextView
+
         android:id="@+id/last_mess"
+        android:padding="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/username"
         android:layout_marginLeft="27dp"
-        android:layout_marginTop="-10dp"
+        android:layout_marginTop="2dp"
         android:layout_toRightOf="@id/profile_image"
+        android:background="@drawable/radius_2"
+        android:backgroundTint="#F2F2F2"
         android:maxLines="1"
-        android:paddingTop="5dp"
         android:text="hello hi"
         android:textColor="#7E7D7D"
-        android:textSize="14dp" />
+        android:textSize="12dp" />
 
 </RelativeLayout>

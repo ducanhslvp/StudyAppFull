@@ -27,7 +27,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.ducanh.appchat.databinding.ActivityAddNotificationBinding;
 
 import java.util.Calendar;
 

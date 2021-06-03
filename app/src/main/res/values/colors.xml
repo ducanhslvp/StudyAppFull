@@ -17,5 +17,8 @@
     <color name="btnlightblack">#22223b</color>
     <color name="btnSend">#88d498</color>
     <color name="txtSendRight">#3C3E3E</color>
+    <color name="lightDark">#A1A1A1</color>
+    <color name="green">#2E6E30</color>
+
 
 </resources>

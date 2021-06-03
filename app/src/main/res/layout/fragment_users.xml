@@ -9,16 +9,18 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/radius_circle"
         android:layout_height="50dp">
 
         <EditText
+            android:padding="10dp"
             android:id="@+id/search_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="45dp"
             android:layout_margin="5dp"
             android:hint="Tìm kiếm..."
             android:textSize="14dp" />

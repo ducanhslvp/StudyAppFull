@@ -21,10 +21,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/message"
             android:layout_marginLeft="25dp"
-            android:padding="8dp"
+            android:padding="5dp"
             android:text="helththththlo"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="@color/white"
+
             android:layout_alignParentEnd="true"
             android:layout_marginStart="25dp"
             android:background="@drawable/background_right"

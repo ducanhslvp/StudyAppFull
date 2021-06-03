@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +39,8 @@ import java.util.List;
 
 public class TranslateActivity extends AppCompatActivity {
 
-    private Button btnCapture, btnTranslate;
+    private Button  btnTranslate;
+    private ImageButton btnCapture;
     private ImageView imageView;
     private TextView outputtxt;
     private EditText inputText,outputText;
@@ -51,7 +53,7 @@ public class TranslateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_translate);
 
         btnCapture=findViewById(R.id.btn_takepicture);
-        btnTranslate=findViewById(R.id.btn_translate);
+//        btnTranslate=findViewById(R.id.btn_translate);
         inputText=findViewById(R.id.edit_input);
         outputText=findViewById(R.id.edit_output);
         imageView=findViewById(R.id.imageView);
@@ -86,21 +88,21 @@ public class TranslateActivity extends AppCompatActivity {
                 }
             }
         });
-        btnTranslate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!inputText.getText().toString().equals("")){
-                    translate(inputText.getText().toString());
-                }else
-                    if (imageBitmap!=null){
-                        detect();
-                }
-                else{
-                        Toast.makeText(TranslateActivity.this,"No text translate",Toast.LENGTH_SHORT).show();
-                    }
-
-            }
-        });
+//        btnTranslate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!inputText.getText().toString().equals("")){
+//                    translate(inputText.getText().toString());
+//                }else
+//                    if (imageBitmap!=null){
+//                        detect();
+//                }
+//                else{
+//                        Toast.makeText(TranslateActivity.this,"No text translate",Toast.LENGTH_SHORT).show();
+//                    }
+//
+//            }
+//        });
 
     }
 
