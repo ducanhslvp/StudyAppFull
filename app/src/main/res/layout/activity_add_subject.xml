@@ -5,31 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background"
     tools:context=".AddSubjectActivity">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="wrap_content"
+    <TextView
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:textSize="20dp"
         android:layout_height="wrap_content"
+        android:text="MÔN HỌC" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_margin="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_2"
         android:orientation="horizontal">
 
         <EditText
+            android:layout_margin="5dp"
             android:id="@+id/edit_subjectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="SubjectName"
+            android:hint="Tên môn học..."
+            android:textSize="16dp"
             android:ems="10"
             android:inputType="textEmailAddress" />
+
         <Button
-            android:text="Add Subject"
+            android:text="Thêm môn"
+            android:textColor="@color/white"
+            android:background="@drawable/radius_btn"
+            android:backgroundTint="@color/toolbar"
             android:id="@+id/btn_addSubject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_margin="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/radius_2"
+        android:backgroundTint="@color/white"
         android:orientation="horizontal">
 
         <Spinner
@@ -44,28 +68,21 @@
             android:id="@+id/test_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
         <TextView
+            android:visibility="gone"
             android:id="@+id/txt_subjectName"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_gravity="center"
-            android:background="@color/toolbar"
             android:layout_width="wrap_content"
             android:layout_margin="10dp"
             android:textSize="20dp"
             android:layout_height="wrap_content"
             android:text="SubjectName" />
         <TextView
+            android:visibility="gone"
             android:id="@+id/txt_testName"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_gravity="center"
-            android:background="@color/toolbar"
             android:layout_width="wrap_content"
             android:layout_margin="10dp"
             android:textSize="20dp"
@@ -74,40 +91,142 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
     <TextView
-        android:id="@+id/textView2"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:layout_gravity="center"
-        android:background="@color/toolbar"
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:textSize="20dp"
         android:layout_height="wrap_content"
-        android:text="Question" />
+        android:text="CÂU HỎI" />
 
-    <EditText
-        android:id="@+id/edit_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Question"
-
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/edit_answer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Answer"
-        android:inputType="textEmailAddress" />
-
-    <Button
-        android:id="@+id/btn_addTest"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_margin="3dp"
+        android:backgroundTint="@color/white"
+        android:background="@drawable/radius_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add test" />
+        android:orientation="vertical">
 
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_marginStart="8dp"
+                android:id="@+id/edit_question"
+                android:layout_width="300dp"
+                android:layout_height="250dp"
+                android:ems="10"
+                android:hint="Câu hỏi..."
+                android:inputType="textMultiLine" />
+
+            <ImageButton
+                android:layout_marginTop="80dp"
+                android:background="@drawable/radius_btn"
+                android:backgroundTint="@color/background"
+                android:src="@drawable/ic_baseline_photo_camera_24"
+                android:id="@+id/btn_image_question"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+        </LinearLayout>
+
+        <EditText
+            android:layout_margin="5dp"
+            android:id="@+id/edit_answerA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Đáp án A"
+
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:layout_margin="5dp"
+            android:id="@+id/edit_answerB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Đáp án B"
+
+            android:inputType="textEmailAddress" />
+        <EditText
+            android:layout_margin="5dp"
+            android:id="@+id/edit_answerC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Đáp án C"
+
+            android:inputType="textEmailAddress" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txt_answer"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="18dp"
+                android:layout_height="wrap_content"
+                android:text="A" />
+
+            <TextView
+                android:id="@+id/txt_answer2"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="16dp"
+                android:layout_height="wrap_content"
+                android:text="Đáp án:" />
+
+            <Spinner
+                android:layout_margin="10dp"
+
+                android:id="@+id/answer_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <Button
+            android:background="@drawable/radius_btn"
+            android:backgroundTint="@color/btnsucces"
+            android:textColor="@color/white"
+            android:id="@+id/btn_addTest"
+            android:layout_marginLeft="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add test" />
+        <Button
+            android:background="@drawable/radius_btn"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/white"
+            android:layout_marginLeft="50dp"
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </LinearLayout>

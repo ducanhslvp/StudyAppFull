@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,7 +17,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppChat">
-        <activity android:name=".TestActivity"></activity>
+        <activity
+            android:name=".AddNotificationActivity"
+            android:label="@string/title_activity_add_notification"
+            android:theme="@style/Theme.AppChat.NoActionBar"></activity>
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr" />
+
+        <activity android:name=".TranslateActivity" />
+        <activity android:name=".TestActivity" />
         <activity android:name=".AddSubjectActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MessageActivity" />

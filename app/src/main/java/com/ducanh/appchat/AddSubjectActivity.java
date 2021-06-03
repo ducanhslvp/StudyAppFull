@@ -3,7 +3,11 @@ package com.ducanh.appchat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Adapter;
@@ -11,13 +15,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ducanh.appchat.api.DetectImage;
 import com.ducanh.appchat.model.Question;
 import com.ducanh.appchat.model.Subject;
 import com.ducanh.appchat.model.Test;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,18 +34,29 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.ducanh.appchat.TranslateActivity.REQUEST_IMAGE_CAPTURE;
+
 public class AddSubjectActivity extends AppCompatActivity {
-    private EditText txtSubjectname,txtQuestion,txtAnswer,txtTestName;
-    TextView txtSubjectName2,txtTestName2;
-    private Button btnAddTest,btnAddSubject;
-    Spinner subjectSpinner,testSpinner;
+    private EditText txtSubjectname,txtQuestion,txtAnswerA,txtAnswerB,txtAnswerC;
+    ImageButton imageQuestion;
+    TextView txtSubjectName2,txtTestName2,txtAnswer;
+    private Button btnAddTest,btnAddSubject,btnBack;
+    Spinner subjectSpinner,testSpinner,spinnerAnswer;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    Bitmap imageBitmap;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +65,13 @@ public class AddSubjectActivity extends AppCompatActivity {
 
         txtSubjectname=findViewById(R.id.edit_subjectName);
         txtQuestion=findViewById(R.id.edit_question);
-        txtAnswer=findViewById(R.id.edit_answer);
+        txtAnswer=findViewById(R.id.txt_answer);
+
+        spinnerAnswer=findViewById(R.id.answer_spinner);
+        txtAnswerA=findViewById(R.id.edit_answerA);
+        txtAnswerB=findViewById(R.id.edit_answerB);
+        txtAnswerC=findViewById(R.id.edit_answerC);
+
         subjectSpinner=findViewById(R.id.subject_spinner);
         testSpinner=findViewById(R.id.test_spinner);
 
@@ -54,8 +80,17 @@ public class AddSubjectActivity extends AppCompatActivity {
 
         btnAddTest=findViewById(R.id.btn_addTest);
         btnAddSubject=findViewById(R.id.btn_addSubject);
+        btnBack=findViewById(R.id.btn_back);
+        imageQuestion=findViewById(R.id.btn_image_question);
 
         setSpinner();
+
+        imageQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
 
 //        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
 //        reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
@@ -94,6 +129,19 @@ public class AddSubjectActivity extends AppCompatActivity {
 
             }
         });
+        spinnerAnswer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Adapter adapter = parent.getAdapter();
+                txtAnswer.setText(adapter.getItem(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         btnAddTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +149,9 @@ public class AddSubjectActivity extends AppCompatActivity {
                 String answer=txtAnswer.getText().toString();
                 String subjectName=txtSubjectName2.getText().toString();
                 String testName=txtTestName2.getText().toString();
+                String answerA=txtAnswerA.getText().toString();
+                String answerB=txtAnswerB.getText().toString();
+                String answerC=txtAnswerC.getText().toString();
 
 
                 if (TextUtils.isEmpty((subjectName)) || TextUtils.isEmpty(question)
@@ -108,11 +159,17 @@ public class AddSubjectActivity extends AppCompatActivity {
                     Toast.makeText(AddSubjectActivity.this, "Hãy nhập tất cả các dòng",Toast.LENGTH_SHORT).show();
 
                 }else{
-                    Question question1=new Question(question,answer);
+                    Question question1=new Question(question,answerA,answerB,answerC,answer);
                     Test test=new Test(testName,subjectName,question1);
                     addTest(test);
                 }
-
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(AddSubjectActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -126,6 +183,14 @@ public class AddSubjectActivity extends AppCompatActivity {
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.testSpinner.setAdapter(adapter2);
 
+        //set spinner answer
+
+        String answer[]={"A","B","C"};
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,
+                answer);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinnerAnswer.setAdapter(adapter3);
     }
 
     private void getSubject(){
@@ -193,6 +258,60 @@ public class AddSubjectActivity extends AppCompatActivity {
         hashMap2.put("subjectName",test.getSubjectName());
         hashMap2.put("question",test.getQuestion());
         FirebaseDatabase.getInstance().getReference().child("Tests").push().setValue(hashMap2);
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+//            imageView.setImageBitmap(imageBitmap);
+            detect();
+        }
+    }
+    private void detect() {
+        System.out.println("co chay qua day---------");
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
+
+        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+                .getCloudTextRecognizer();
+        FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
+                .setLanguageHints(Arrays.asList("en", "hi"))
+                .build();
+        Task<FirebaseVisionText> result =
+                detector.processImage(image)
+                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                            @Override
+                            public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                displayText(firebaseVisionText);
+                            }
+                        })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+    }
+    private void displayText(FirebaseVisionText result) {
+        String resultText = result.getText();
+        String text="";
+        for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
+            String blockText = block.getText();
+            text+=" "+blockText;
+        }
+        txtQuestion.setText("");
+        txtQuestion.setText(text);
     }
 
 

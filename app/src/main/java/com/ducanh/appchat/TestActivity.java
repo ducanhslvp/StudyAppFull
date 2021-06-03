@@ -6,6 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.ducanh.appchat.adapter.SubjectAdapter;
 import com.ducanh.appchat.adapter.TestAdapter;
@@ -23,10 +29,14 @@ import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
+    Button btnCaculatrPoint,btnViewAnswer;
+    TextView txtPoint, txtCorrect;
     TestAdapter testAdapter;
     List<Test> listTest=new ArrayList<>();
+    List<Test> listTest2=new ArrayList<>();
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +44,75 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
 
         recyclerView=findViewById(R.id.recycler_view);
+        txtPoint=findViewById(R.id.txt_point);
+        txtCorrect=findViewById(R.id.txt_correct);
+        btnViewAnswer=findViewById(R.id.btn_viewAnswerCorrect);
+
+
+        spinner=findViewById(R.id.spinner_ky);
+
+        String tests[]={"Tất cả","15 phut","Giua ky","Hoc ky"};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,
+                tests);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinner.setAdapter(adapter2);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                listTest2.clear();
+                if (position==0) listTest2.addAll(listTest);
+                else{
+                    String name=tests[position];
+                    for (Test test:listTest){
+                        if (test.getName().equals(name))
+                            listTest2.add(test);
+                    }
+                }
+                testAdapter =new TestAdapter(TestActivity.this,listTest2,false);
+                recyclerView.setAdapter(testAdapter);
+                btnViewAnswer.setEnabled(true);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getTest();
+
+//        btnCaculatrPoint.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String[] listAnswer=testAdapter.getListAnswer();
+//
+//
+//            }
+//        });
+        btnViewAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] listAnswer=testAdapter.getListAnswer();
+
+                int correct=0;
+                for (int i=0;i<listTest2.size();i++)
+                    if (listAnswer[i].equals(listTest2.get(i).getQuestion().getAnswer())){
+                        correct++;
+                    }
+                txtCorrect.setText("Correct: "+correct+"/"+listTest2.size());
+                txtPoint.setText("Point: "+((float) correct/listTest2.size()*10));
+
+                testAdapter =new TestAdapter(TestActivity.this,listTest2,listAnswer,true);
+                recyclerView.setAdapter(testAdapter);
+                btnViewAnswer.setEnabled(false);
+            }
+        });
 
     }
     private void getTest(){
@@ -51,7 +126,9 @@ public class TestActivity extends AppCompatActivity {
                     listTest.add(test);
 
                 }
-                testAdapter =new TestAdapter(TestActivity.this,listTest);
+                listTest2.addAll(listTest);
+
+                testAdapter =new TestAdapter(TestActivity.this,listTest2,false);
                 recyclerView.setAdapter(testAdapter);
             }
 

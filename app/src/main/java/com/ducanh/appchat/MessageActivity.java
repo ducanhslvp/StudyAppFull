@@ -99,7 +99,8 @@ public class MessageActivity extends AppCompatActivity {
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
         intent=getIntent();
-        userId=intent.getStringExtra("user");
+        User user1=(User) intent.getSerializableExtra("user");
+        userId=user1.getId();
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +110,7 @@ public class MessageActivity extends AppCompatActivity {
                 if (!msg.equals("")){
                     sendMessage(firebaseUser.getUid(),userId,msg);
                 }else{
-                    Toast.makeText(MessageActivity.this,"Hay nhap tin nhan",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MessageActivity.this,"Hãy nhập tin nhắn",Toast.LENGTH_SHORT).show();
                 }
                 textSend.setText("");
             }
@@ -119,7 +120,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user=snapshot.getValue(User.class);
-                username.setText(user.getUsername());
+                username.setText(user1.getUsername());
                 if (user.getImageURL().equals("default")){
                     profileImage.setImageResource(R.mipmap.ic_launcher);
 
@@ -187,7 +188,7 @@ public class MessageActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot1:snapshot.getChildren()){
                     Token token=snapshot1.getValue(Token.class);
                     Data data=new Data(firebaseUser.getUid(),R.mipmap.ic_launcher,username+": "
-                            +message,"New Message",userId);
+                            +message,"Tin nhắn mới",userId);
 
                     Sender sender=new Sender(data,token.getToken());
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -195,7 +196,7 @@ public class MessageActivity extends AppCompatActivity {
                         public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                             if (response.code()==200){
                                 if (response.body().success!=1){
-                                    Toast.makeText(MessageActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MessageActivity.this, "Get Failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

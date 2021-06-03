@@ -1,10 +1,15 @@
 package com.ducanh.appchat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -25,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.ducanh.appchat.adapter.FargmentNavigationAdapter;
 import com.ducanh.appchat.fragments.ChatsFragment;
 import com.ducanh.appchat.fragments.UsersFragment;
+import com.ducanh.appchat.model.Noti;
 import com.ducanh.appchat.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -36,8 +44,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+
+    final String CHANNEL_ID = "101";
+    int notificationId=1;
+    SQLiteHelper sqLiteHelper;
+    List<Noti> notiList= new ArrayList<>();
 
 
     @Override
@@ -108,27 +124,47 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-//        reference=FirebaseDatabase.getInstance().getReference("Chats");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull @org.jetbrains.annotations.NotNull DataSnapshot snapshot) {
-//                int unread=0;
-//                for (DataSnapshot snapshot1:snapshot.getChildren())
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull @org.jetbrains.annotations.NotNull DatabaseError error) {
-//
-//            }
-//        })
 
-//        ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(getSupportFragmentManager());
-//        viewPagerAdapter.addFragment(new ChatsFragment(),"Chat");
-//        viewPagerAdapter.addFragment(new UsersFragment(),"User");
-//
-//        viewPager.setAdapter(viewPagerAdapter);
-//
-//        tabLayout.setupWithViewPager(viewPager);
+        //----------------------------------------------
+
+
+//        try {
+//            System.out.println(sqLiteHelper.getDate()+"--------------------------");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+        createNotificationChannel();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while(true) {
+                    try {
+                        Thread.sleep(50000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (checkTime()) {
+
+
+                        NotificationCompat.Builder builder =
+                                new NotificationCompat.Builder(MainActivity.this,CHANNEL_ID)
+                                        .setSmallIcon(R.drawable.ic_launcher_background)
+                                        .setContentTitle(notiList.get(notiList.size()-1).getTitle())
+                                        .setContentText("Bài kiểm tra đang đợi bạn")
+                                        .setColor(Color.RED)
+                                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                        .setAutoCancel(true);
+                        NotificationManagerCompat notificationManagerCompat =
+                                NotificationManagerCompat.from(MainActivity.this);
+                        notificationManagerCompat.notify(notificationId, builder.build());
+                        break;
+                    }
+
+                }
+            }
+        }).start();
     }
 
 
@@ -158,37 +194,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-//    class ViewPagerAdapter extends FragmentPagerAdapter{
-//        private ArrayList<Fragment> fragments;
-//        private ArrayList<String> titles;
-//
-//        ViewPagerAdapter(FragmentManager fragmentManager){
-//            super(fragmentManager);
-//            this.fragments=new ArrayList<>();
-//            this.titles=new ArrayList<>();
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Fragment getItem(int position) {
-//            return fragments.get(position);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return fragments.size();
-//        }
-//        public  void addFragment(Fragment fragment,String title){
-//            fragments.add(fragment);
-//            titles.add(title);
-//        }
-//
-//        @Nullable
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return titles.get(position);
-//        }
-//    }
     private  void status(String status){
         reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         HashMap<String, Object> hashMap=new HashMap<>();
@@ -207,4 +212,55 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         status("offline");
     }
+    private boolean checkTime(){
+        Calendar c = Calendar.getInstance();
+        int hour, minute, second;
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        second = c.get(Calendar.SECOND);
+
+        int ngay,thang,gio,phut;
+
+        sqLiteHelper=new SQLiteHelper(this);
+
+
+        try {
+            notiList = sqLiteHelper.getNoti();
+
+            if (notiList!=null) {
+                Noti noti = notiList.get(notiList.size() - 1);
+                String time1 = noti.getTime();
+                String date[] =time1.split("/");
+//            ngay = Integer.parseInt(date[2]);
+//            thang = Integer.parseInt(date[3]);
+                gio = Integer.parseInt(date[0]);
+                phut = Integer.parseInt(date[1]);
+
+                if (hour == gio && minute == phut &&
+                        second >= 0) return true;
+            }
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return false;
+    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("This is notification channel");
+            NotificationManager manager =
+                    getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
 }
