@@ -11,7 +11,7 @@
         android:title="Tài khoản"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/addSubject"
-        android:title="Thêm đề bài"
+        android:id="@+id/translate"
+        android:title="Dịch ngôn ngữ"
         app:showAsAction="never"/>
 </menu>

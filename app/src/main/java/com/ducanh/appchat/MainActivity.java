@@ -172,15 +172,16 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this,StartActivity.class)
+                startActivity(new Intent(MainActivity.this,LoginActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                finish();
                 return true;
             case R.id.profile:
                 startActivity(new Intent(MainActivity.this,ProfileActivity.class));
                 finish();
                 return true;
-            case R.id.addSubject:
-                startActivity(new Intent(MainActivity.this,AddSubjectActivity.class));
+            case R.id.translate:
+                startActivity(new Intent(MainActivity.this,TranslateActivity.class));
                 finish();
                 return true;
 

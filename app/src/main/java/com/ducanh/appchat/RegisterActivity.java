@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Đăng ký");
+        getSupportActionBar().setTitle("ĐĂNG KÝ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         username=findViewById(R.id.username);
