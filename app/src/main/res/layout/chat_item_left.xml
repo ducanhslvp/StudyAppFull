@@ -27,10 +27,17 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginEnd="5dp"
                     android:background="@drawable/background_left"
-                    android:padding="5dp"
+                    android:padding="8dp"
                     android:text="hello"
                     android:textColor="@color/black"
                     android:textSize="16dp" />
+                <ImageView
+                    android:background="@drawable/radius_2"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
+                    android:id="@+id/image_mesage"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"/>
 
         </LinearLayout>
 

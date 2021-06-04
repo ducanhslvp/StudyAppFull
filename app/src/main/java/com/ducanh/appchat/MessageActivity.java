@@ -6,10 +6,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,6 +30,10 @@ import com.ducanh.appchat.notifications.Data;
 import com.ducanh.appchat.notifications.MyResponse;
 import com.ducanh.appchat.notifications.Sender;
 import com.ducanh.appchat.notifications.Token;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +42,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +65,7 @@ public class MessageActivity extends AppCompatActivity {
 
     Intent intent;
 
-    ImageButton btnSend;
+    ImageButton btnSend,btnImage;
     EditText textSend;
 
     MessageAdapter messageAdapter;
@@ -64,6 +76,12 @@ public class MessageActivity extends AppCompatActivity {
 
     APIService apiService;
     boolean notify=false;
+
+    StorageReference storageReference;
+    private static final  int IMAGE_REQUEST=1;
+    private final int PICK_IMAGE_REQUEST = 71;
+    private Uri imageUri;
+    private StorageTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +112,7 @@ public class MessageActivity extends AppCompatActivity {
 
         btnSend=findViewById(R.id.btn_send);
         textSend=findViewById(R.id.text_send);
+        btnImage=findViewById(R.id.btn_imageChat);
 
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
@@ -133,6 +152,16 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+        storageReference= FirebaseStorage.getInstance().getReference("images");
+
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        btnImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
             }
         });
     }
@@ -265,5 +294,76 @@ public class MessageActivity extends AppCompatActivity {
         super.onPause();
         status("offline");
         currenUser("none");
+    }
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+    private String getFileExtension(Uri uri){
+        ContentResolver conentResolver=getBaseContext().getContentResolver();
+        MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
+        return  mimeTypeMap.getExtensionFromMimeType(conentResolver.getType(uri));
+    }
+    private void uploadImage(){
+        final ProgressDialog pd=new ProgressDialog(MessageActivity.this);
+        pd.setMessage("Đang tải lên");
+        pd.show();
+
+        if (imageUri !=null){
+            final StorageReference fileReference=storageReference.child(System.currentTimeMillis()+
+                    "."+getFileExtension(imageUri));
+            uploadTask=fileReference.putFile(imageUri);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull  Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()){
+                        throw  task.getException();
+                    }
+                    return  fileReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()){
+                        Uri downloadUri=task.getResult();
+                        String mUri =downloadUri.toString();
+
+//                        reference=FirebaseDatabase.getInstance().getReference("Chats")
+//                                .child(firebaseUser.getUid());
+//                        HashMap<String, Object> map=new HashMap<>();
+//                        map.put("imageURL",mUri);
+//                        reference.updateChildren(map);
+                        sendMessage(firebaseUser.getUid(),userId,mUri);
+
+                        pd.dismiss();
+                    }else{
+                        Toast.makeText(getBaseContext(),"Failed",Toast.LENGTH_SHORT).show();
+                        pd.dismiss();
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull  Exception e) {
+                    Toast.makeText(getBaseContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
+                }
+            });
+        }else {
+            Toast.makeText(getBaseContext(),"No image selected",Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            imageUri=data.getData();
+            uploadImage();
+
+        }
     }
 }

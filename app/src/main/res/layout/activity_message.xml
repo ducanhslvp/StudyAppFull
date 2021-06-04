@@ -64,7 +64,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:id="@+id/btn_image"
+                android:id="@+id/btn_imageChat"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/ic_baseline_photo_camera_24"
                 android:layout_below="@+id/recycler_view"

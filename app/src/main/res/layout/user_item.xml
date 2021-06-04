@@ -5,17 +5,18 @@
     android:padding="5dp"
     android:background="@drawable/radius_2"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
+    android:layout_margin="3dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="5dp"
     app:cardCornerRadius="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_marginLeft="10dp"
+        android:id="@+id/profile_image"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:id="@+id/profile_image"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/username"

@@ -126,7 +126,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
     private void uploadImage(){
         final ProgressDialog pd=new ProgressDialog(ProfileActivity.this);
-        pd.setMessage("Uploading");
+        pd.setMessage("Đang tải lên");
         pd.show();
 
         if (imageUri !=null){
