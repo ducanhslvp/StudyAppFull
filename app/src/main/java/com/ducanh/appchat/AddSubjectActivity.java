@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -39,6 +41,7 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+import com.google.firebase.ml.vision.text.RecognizedLanguage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,6 +105,7 @@ public class AddSubjectActivity extends AppCompatActivity {
                 String subjectName=txtSubjectname.getText().toString();
                 Subject subject=new Subject(subjectName,"0");
                 addSubject(subject);
+                Toast.makeText(AddSubjectActivity.this, "Thêm môn học thành công",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -162,6 +166,7 @@ public class AddSubjectActivity extends AppCompatActivity {
                     Question question1=new Question(question,answerA,answerB,answerC,answer);
                     Test test=new Test(testName,subjectName,question1);
                     addTest(test);
+                    Toast.makeText(AddSubjectActivity.this, "Thêm đề thành công",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -176,7 +181,7 @@ public class AddSubjectActivity extends AppCompatActivity {
     }
     public void setSpinner(){
         getSubject();
-        String tests[]={"15 phut","Giua ky","Hoc ky"};
+        String tests[]={"15 Phút","Giữ kỳ","Học kỳ"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
                 tests);
@@ -309,9 +314,36 @@ public class AddSubjectActivity extends AppCompatActivity {
         for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
             String blockText = block.getText();
             text+=" "+blockText;
+            System.out.println("block text:    "+blockText);
         }
         txtQuestion.setText("");
         txtQuestion.setText(text);
+
+        for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
+            String blockText = block.getText();
+            System.out.println("Block============="+blockText);
+            Float blockConfidence = block.getConfidence();
+            List<RecognizedLanguage> blockLanguages = block.getRecognizedLanguages();
+            Point[] blockCornerPoints = block.getCornerPoints();
+            Rect blockFrame = block.getBoundingBox();
+            for (FirebaseVisionText.Line line: block.getLines()) {
+                String lineText = line.getText();
+                System.out.println("Line============="+lineText);
+                Float lineConfidence = line.getConfidence();
+                List<RecognizedLanguage> lineLanguages = line.getRecognizedLanguages();
+                Point[] lineCornerPoints = line.getCornerPoints();
+                Rect lineFrame = line.getBoundingBox();
+                for (FirebaseVisionText.Element element: line.getElements()) {
+                    String elementText = element.getText();
+                    System.out.println("Element============="+elementText);
+                    Float elementConfidence = element.getConfidence();
+                    List<RecognizedLanguage> elementLanguages = element.getRecognizedLanguages();
+                    Point[] elementCornerPoints = element.getCornerPoints();
+                    Rect elementFrame = element.getBoundingBox();
+                }
+            }
+            System.out.println("==================");
+        }
     }
 
 

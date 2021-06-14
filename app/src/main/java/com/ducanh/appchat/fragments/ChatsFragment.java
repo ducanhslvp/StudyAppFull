@@ -72,7 +72,7 @@ public class ChatsFragment extends Fragment {
 //
 //            }
 //        });
-        reference=FirebaseDatabase.getInstance().getReference("Chatlist").child(firebaseUser.getUid());
+        reference=FirebaseDatabase.getInstance().getReference("ListChat").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

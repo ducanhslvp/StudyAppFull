@@ -174,13 +174,13 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("message",message);
 
         reference.child("Chats").push().setValue(hashMap);
-        DatabaseReference chatRef=FirebaseDatabase.getInstance().getReference("Chatlist")
+        DatabaseReference chatRef=FirebaseDatabase.getInstance().getReference("ListChat")
                 .child(firebaseUser.getUid()).child(userId);
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()){
-                    chatRef.child("id").setValue(userId);
+                    chatRef.child("id").setValue(firebaseUser.getUid());
                 }
             }
 

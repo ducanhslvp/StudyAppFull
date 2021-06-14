@@ -54,14 +54,14 @@ public class MyFireBaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification=remoteMessage.getNotification();
 //        String s=user.replaceAll("[\\D]","");
-        System.out.println("++++" + user.replaceAll("[\\D]", "") + "++++++++++++++++++++++++");
-        int j = 5555;
+//        System.out.println("++++" + user.replaceAll("[\\D]", "") + "++++++++++++++++++++++++");
+        int j = 5;
         Intent intent = new Intent(this, MessageActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("userid", user);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,j, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaulSound=RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         OreoNotification oreoNotification=new OreoNotification(this);

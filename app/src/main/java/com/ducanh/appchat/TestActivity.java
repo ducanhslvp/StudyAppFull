@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -18,6 +19,9 @@ import com.ducanh.appchat.adapter.SubjectAdapter;
 import com.ducanh.appchat.adapter.TestAdapter;
 import com.ducanh.appchat.model.Subject;
 import com.ducanh.appchat.model.Test;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
@@ -39,6 +44,8 @@ public class TestActivity extends AppCompatActivity {
     DatabaseReference reference;
     Spinner spinner;
     CountDownTimer Timer;
+    String subjectName;
+    String textTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +58,16 @@ public class TestActivity extends AppCompatActivity {
         btnViewAnswer=findViewById(R.id.btn_viewAnswerCorrect);
         txtCoundown=findViewById(R.id.txt_coundown);
 
+        Intent intent=new Intent();
+        intent=getIntent();
+        subjectName=intent.getStringExtra("subjectName");
+
+
         Timer = new CountDownTimer(30*1000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 txtCoundown.setText("Thời gian: "+String.valueOf(millisUntilFinished/1000));
+                textTime=String.valueOf(millisUntilFinished/1000);
             }
 
             @Override
@@ -67,7 +80,7 @@ public class TestActivity extends AppCompatActivity {
 
         spinner=findViewById(R.id.spinner_ky);
 
-        String tests[]={"Tất cả","15 phut","Giua ky","Hoc ky"};
+        String tests[]={"Tất cả","15 Phút","Giữ kỳ","Học kỳ"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,
                 tests);
@@ -83,6 +96,7 @@ public class TestActivity extends AppCompatActivity {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         txtCoundown.setText("Thời gian: "+String.valueOf(millisUntilFinished/1000));
+                        textTime=String.valueOf(millisUntilFinished/1000);
                     }
 
                     @Override
@@ -143,8 +157,24 @@ public class TestActivity extends AppCompatActivity {
             if (listAnswer[i].equals(listTest2.get(i).getQuestion().getAnswer())){
                 correct++;
             }
+        Float point=((float) correct/listTest2.size()*10);
         txtCorrect.setText("Correct: "+correct+"/"+listTest2.size());
-        txtPoint.setText("Point: "+((float) correct/listTest2.size()*10));
+        txtPoint.setText("Point: "+point);
+
+        //-----luu diem vao csdl
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        reference=FirebaseDatabase.getInstance().getReference("Points").child(firebaseUser.getUid());
+
+        HashMap<String , String> hashMap=new HashMap<>();
+        hashMap.put("id",firebaseUser.getUid());
+        hashMap.put("subject",subjectName);
+        hashMap.put("point",point.toString());
+
+        hashMap.put("time",textTime);
+
+        reference.push().setValue(hashMap);
+
+
 
         testAdapter =new TestAdapter(TestActivity.this,listTest2,listAnswer,true);
         recyclerView.setAdapter(testAdapter);
@@ -158,9 +188,12 @@ public class TestActivity extends AppCompatActivity {
                 listTest.clear();
                 for (DataSnapshot snapshot1:snapshot.getChildren()){
                     Test test=snapshot1.getValue(Test.class);
-                    listTest.add(test);
+                    if (test.getSubjectName().equals(subjectName))
+                        listTest.add(test);
 
                 }
+                //-chon bai theo mon hoc
+                System.out.println(subjectName+"===================subject name la");
                 listTest2.addAll(listTest);
 
                 testAdapter =new TestAdapter(TestActivity.this,listTest2,false);

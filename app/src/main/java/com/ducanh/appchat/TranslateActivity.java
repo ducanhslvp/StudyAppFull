@@ -113,7 +113,7 @@ public class TranslateActivity extends AppCompatActivity {
         FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
                 .getCloudTextRecognizer();
         FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
-                .setLanguageHints(Arrays.asList("en", "hi"))
+                .setLanguageHints(Arrays.asList("vi", "hi"))
                 .build();
         Task<FirebaseVisionText> result =
                 detector.processImage(image)
@@ -166,7 +166,7 @@ public class TranslateActivity extends AppCompatActivity {
     public void translate(String text){
         TranslatorOptions options =
                 new TranslatorOptions.Builder()
-                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setSourceLanguage(TranslateLanguage.VIETNAMESE)
                         .setTargetLanguage(TranslateLanguage.VIETNAMESE)
                         .build();
         final Translator englishGermanTranslator =

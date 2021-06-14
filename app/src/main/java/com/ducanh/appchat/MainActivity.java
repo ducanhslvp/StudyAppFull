@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
                         NotificationCompat.Builder builder =
                                 new NotificationCompat.Builder(MainActivity.this,CHANNEL_ID)
-                                        .setSmallIcon(R.drawable.ic_launcher_background)
+                                        .setSmallIcon(R.drawable.ic_baseline_supervised_user_circle_24)
                                         .setContentTitle(notiList.get(notiList.size()-1).getTitle())
                                         .setContentText("Bài kiểm tra đang đợi bạn")
                                         .setColor(Color.RED)
@@ -174,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                finish();
                 return true;
             case R.id.profile:
                 startActivity(new Intent(MainActivity.this,ProfileActivity.class));
@@ -233,8 +232,6 @@ public class MainActivity extends AppCompatActivity {
                 if (hour == gio && minute == phut &&
                         second >= 0) return true;
             }
-
-
         } catch (ParseException e) {
             e.printStackTrace();
         }

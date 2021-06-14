@@ -31,6 +31,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "time TEXT," +
                 "title TEXT)";
         db.execSQL(sql);
+//      addNoti(new Noti(1,"00/30/00/04/06/2021","Làm bài tập"));
     }
 
     @Override
@@ -51,7 +52,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         statement.execSQL(sql,args);
     }
     public List<Noti> getNoti() throws ParseException {
+//        addNoti(new Noti(1,"00/30/00/04/06/2021","Làm bài tập"));
         List<Noti> list=new ArrayList<>();
+        list.add(new Noti(1,"00/30/00/04/06/2021","Làm bài tập"));
         SQLiteDatabase statement=getReadableDatabase();
 //        addNoti(new Noti(0,"00:30:12:12:2020","test"));
         Cursor rs=statement.query("Noti",null,
