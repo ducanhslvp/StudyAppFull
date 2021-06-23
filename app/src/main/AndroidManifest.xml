@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -17,10 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppChat">
+        <activity android:name=".activity.ClassActivity"></activity>
+        <activity android:name=".activity.AddClassActivity" />
         <activity
             android:name=".AddNotificationActivity"
             android:label="@string/title_activity_add_notification"
-            android:theme="@style/Theme.AppChat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppChat.NoActionBar" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
@@ -39,13 +42,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-<!--        <activity-->
-<!--            android:name=".LoginActivity"-->
-<!--            android:parentActivityName=".StartActivity" />-->
-<!--        <activity-->
-<!--            android:name=".RegisterActivity"-->
-<!--            android:parentActivityName=".StartActivity" /> -->
+        <activity android:name=".MainActivity" /> <!-- <activity -->
+        <!-- android:name=".LoginActivity" -->
+        <!-- android:parentActivityName=".StartActivity" /> -->
+        <!-- <activity -->
+        <!-- android:name=".RegisterActivity" -->
+        <!-- android:parentActivityName=".StartActivity" /> -->
         <service
             android:name=".notifications.MyFireBaseMessaging"
             android:exported="false">

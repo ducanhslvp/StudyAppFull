@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.ducanh.appchat.activity.AddClassActivity;
 import com.ducanh.appchat.adapter.FargmentNavigationAdapter;
 import com.ducanh.appchat.fragments.ChatsFragment;
 import com.ducanh.appchat.fragments.UsersFragment;
@@ -119,7 +120,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.menu_oke:viewPager.setCurrentItem(1);
                         break;
-                    case R.id.menu_chat:viewPager.setCurrentItem(2);
+                    case R.id.menu_class:viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.menu_chat:viewPager.setCurrentItem(3);
                         break;
                 }
                 return true;
@@ -181,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.translate:
                 startActivity(new Intent(MainActivity.this,TranslateActivity.class));
+                finish();
+                return true;
+            case R.id.addClass:
+                startActivity(new Intent(MainActivity.this, AddClassActivity.class));
                 finish();
                 return true;
 

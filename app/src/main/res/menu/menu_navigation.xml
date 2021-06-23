@@ -8,6 +8,10 @@
         android:id="@+id/menu_oke"
         android:icon="@drawable/study"
         />
+    <item android:title="Lớp"
+        android:id="@+id/menu_class"
+        android:icon="@drawable/study"
+        />
     <item
         android:title="NHẮN TIN"
         android:id="@+id/menu_chat"

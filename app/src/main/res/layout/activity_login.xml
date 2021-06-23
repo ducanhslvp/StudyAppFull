@@ -56,16 +56,17 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
 
-
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginLeft="15dp"
             android:layout_margin="6dp"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:drawableTint="#00FFFFFF"
             android:hint="Email..."
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:padding="10dp" />
 
     </LinearLayout>
 
@@ -102,7 +103,9 @@
             android:padding="10dp"
             android:layout_margin="6dp"
             android:layout_marginLeft="15dp"
+            android:background="@null"
             android:hint="Mật khẩu..."
+            android:drawableTint="#00FFFFFF"
             android:inputType="textPassword" />
 
     </LinearLayout>
