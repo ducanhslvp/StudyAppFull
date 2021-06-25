@@ -1,6 +1,8 @@
 package com.ducanh.appchat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -91,4 +93,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }

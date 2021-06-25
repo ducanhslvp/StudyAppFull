@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout4"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
     tools:context="com.ducanh.appchat.MainActivity">
@@ -47,6 +47,8 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
 
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
@@ -56,7 +58,10 @@
         app:itemIconTint="@color/color_navigation"
         app:itemTextColor="@color/color_navigation"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/menu_navigation" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.998"
+        app:menu="@menu/menu_navigation"
+        tools:layout_editor_absoluteX="-1dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

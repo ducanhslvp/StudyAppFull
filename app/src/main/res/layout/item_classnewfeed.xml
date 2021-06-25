@@ -2,76 +2,111 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
-    android:background="@drawable/radius_circle"
+    android:layout_margin="3dp"
+    android:background="@drawable/radius_2"
     android:layout_width="match_parent"
+    android:layout_marginBottom="10dp"
     android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.132" />
-
-    <TextView
-        android:id="@+id/txt_username"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_margin="10dp"
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.195"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.042"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.051" />
+
+        <TextView
+            android:id="@+id/txt_username"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="52dp"
+            android:layout_toEndOf="@+id/profile_image"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.045"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btn_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/ic_baseline_more_vert_24"
+            android:backgroundTint="@color/black" />
+
+    </RelativeLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginBottom="10dp"
-        android:layout_width="327dp"
+
+        android:layout_width="377dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
         <TextView
-            android:visibility="gone"
-            android:layout_marginBottom="10dp"
             android:id="@+id/txt_content"
             android:layout_width="300dp"
             android:layout_height="37dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
             android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:visibility="gone"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/image_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.206"
+            app:layout_constraintHorizontal_bias="0.369"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             tools:srcCompat="@tools:sample/avatars" />
 
         <VideoView
-            android:visibility="gone"
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+
+            android:visibility="gone"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,19 +123,30 @@
                 android:id="@+id/txt_subjectName"
                 android:layout_width="129dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginStart="19dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="63dp"
                 android:layout_marginBottom="10dp"
-                android:text="Lap trinh android" />
+                android:layout_toStartOf="@+id/btn_viewTest"
+                android:text="Lap trinh android"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/btn_viewTest"
                 android:layout_width="wrap_content"
-                android:layout_height="37dp"
+                android:layout_height="25dp"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="28dp"
-                android:text="Làm bài" />
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="29dp"
+                android:background="@drawable/radius_btn"
+                android:backgroundTint="@color/btnsucces"
+                android:text="Làm bài"
+                android:textColor="@color/white" />
 
         </RelativeLayout>
 

@@ -8,16 +8,18 @@ public class User implements Serializable {
     private String imageURL;
     private String status;
     private String search;
+    private String role;
 
     public User() {
     }
 
-    public User(String id, String username, String imageURL, String status, String search) {
+    public User(String id, String username, String imageURL, String status, String search, String role) {
         this.id = id;
         this.username = username;
         this.imageURL = imageURL;
         this.status = status;
         this.search = search;
+        this.role = role;
     }
 
     public String getId() {
@@ -58,5 +60,13 @@ public class User implements Serializable {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

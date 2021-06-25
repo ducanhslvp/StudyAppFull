@@ -3,15 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/txt_className"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/radius_circle"
+        android:backgroundTint="@color/white"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/txt_className"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_joinClass"
+            android:layout_width="155dp"
+            android:backgroundTint="@color/btnsucces"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="175dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/txt_className"
+            android:text="Vào lớp" />
+        <Button
+            android:id="@+id/btn_deleteClass"
+            android:layout_width="155dp"
+            android:backgroundTint="@color/red2"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="175dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/txt_className"
+            android:text="Xóa" />
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

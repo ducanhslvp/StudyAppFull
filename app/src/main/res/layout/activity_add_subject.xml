@@ -217,7 +217,7 @@
             android:layout_marginLeft="80dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add test" />
+            android:text="Thêm" />
         <Button
             android:background="@drawable/radius_btn"
             android:backgroundTint="@color/black"
@@ -226,7 +226,7 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back" />
+            android:text="Xong" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </LinearLayout>

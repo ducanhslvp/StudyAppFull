@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ducanh.appchat.activity.ClassActivity;
 import com.ducanh.appchat.api.DetectImage;
 import com.ducanh.appchat.model.Question;
 import com.ducanh.appchat.model.Subject;
@@ -43,6 +45,7 @@ import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,6 +63,8 @@ public class AddSubjectActivity extends AppCompatActivity {
     DatabaseReference reference;
     Bitmap imageBitmap;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    String className="";
+    private final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +91,17 @@ public class AddSubjectActivity extends AppCompatActivity {
         btnBack=findViewById(R.id.btn_back);
         imageQuestion=findViewById(R.id.btn_image_question);
 
+        Intent intent=new Intent();
+        intent=getIntent();
+        className=intent.getStringExtra("className");
+
         setSpinner();
 
         imageQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                    chooseImage();
+//                dispatchTakePictureIntent();
             }
         });
 
@@ -167,14 +177,22 @@ public class AddSubjectActivity extends AppCompatActivity {
                     Test test=new Test(testName,subjectName,question1);
                     addTest(test);
                     Toast.makeText(AddSubjectActivity.this, "Thêm đề thành công",Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(AddSubjectActivity.this, MainActivity.class);
-                startActivity(intent);
+                if (className!=null){
+                    submitFeed(txtSubjectName2.getText().toString(),"subject");
+                    Intent intent=new Intent(AddSubjectActivity.this, ClassActivity.class);
+                    intent.putExtra("class",className);
+                    startActivity(intent);
+                }else{
+                    Intent intent=new Intent(AddSubjectActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -264,7 +282,12 @@ public class AddSubjectActivity extends AppCompatActivity {
         hashMap2.put("question",test.getQuestion());
         FirebaseDatabase.getInstance().getReference().child("Tests").push().setValue(hashMap2);
     }
-
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
@@ -276,10 +299,23 @@ public class AddSubjectActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-//            imageView.setImageBitmap(imageBitmap);
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            Bundle extras = data.getExtras();
+//            imageBitmap = (Bitmap) extras.get("data");
+////            imageView.setImageBitmap(imageBitmap);
+//            detect();
+//        }
+
+
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            Uri imageUri=data.getData();
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             detect();
         }
     }
@@ -309,41 +345,79 @@ public class AddSubjectActivity extends AppCompatActivity {
                                 });
     }
     private void displayText(FirebaseVisionText result) {
-        String resultText = result.getText();
-        String text="";
-        for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
-            String blockText = block.getText();
-            text+=" "+blockText;
-            System.out.println("block text:    "+blockText);
-        }
-        txtQuestion.setText("");
-        txtQuestion.setText(text);
+//        String resultText = result.getText();
+//        String text="";
+//        for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
+//            String blockText = block.getText();
+//            text+=" "+blockText;
+//        }
+
+        String question="";
+        String answerA="";
+        String answerB="";
+        String answerC="";
 
         for (FirebaseVisionText.TextBlock block: result.getTextBlocks()) {
             String blockText = block.getText();
-            System.out.println("Block============="+blockText);
-            Float blockConfidence = block.getConfidence();
-            List<RecognizedLanguage> blockLanguages = block.getRecognizedLanguages();
-            Point[] blockCornerPoints = block.getCornerPoints();
-            Rect blockFrame = block.getBoundingBox();
+
             for (FirebaseVisionText.Line line: block.getLines()) {
                 String lineText = line.getText();
                 System.out.println("Line============="+lineText);
-                Float lineConfidence = line.getConfidence();
-                List<RecognizedLanguage> lineLanguages = line.getRecognizedLanguages();
-                Point[] lineCornerPoints = line.getCornerPoints();
-                Rect lineFrame = line.getBoundingBox();
+
                 for (FirebaseVisionText.Element element: line.getElements()) {
                     String elementText = element.getText();
-                    System.out.println("Element============="+elementText);
-                    Float elementConfidence = element.getConfidence();
-                    List<RecognizedLanguage> elementLanguages = element.getRecognizedLanguages();
-                    Point[] elementCornerPoints = element.getCornerPoints();
-                    Rect elementFrame = element.getBoundingBox();
+
+                    if (elementText.equalsIgnoreCase("Question")){
+                        question=lineText;
+                    }
+                    if (elementText.equals("A.")){
+                        answerA=lineText;
+                    }
+                    if (elementText.equals("B.")){
+                        answerB=lineText;
+                    }
+                    if (elementText.equals("C.")){
+                        answerC=lineText;
+                    }
+
                 }
             }
-            System.out.println("==================");
         }
+        answerA=answerA.replace("A. ","");
+        answerB=answerB.replace("B. ","");
+        answerC=answerC.replace("C. ","");
+
+        String[] questions=question.split(" ");
+        String question2="";
+        for (int i=2;i<questions.length;i++)
+            question2+=questions[i]+" ";
+
+        System.out.println(question2+"  "+answerA+"  "+answerB+"  "+answerC+"++++++++++++++");
+
+        txtQuestion.setText("");
+        txtQuestion.setText(question2);
+
+        txtAnswerA.setText("");
+        txtAnswerA.setText(answerA);
+
+        txtAnswerB.setText("");
+        txtAnswerB.setText(answerB);
+
+        txtAnswerC.setText("");
+        txtAnswerC.setText(answerC);
+
+    }
+    private void submitFeed(String content,String type){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference classRef= FirebaseDatabase.getInstance().getReference("Class")
+                .child(className).child(firebaseUser.getUid());
+
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("userID",firebaseUser.getUid());
+        hashMap.put("content",content);
+        hashMap.put("type",type);
+        classRef.push().setValue(hashMap);
+
     }
 
 

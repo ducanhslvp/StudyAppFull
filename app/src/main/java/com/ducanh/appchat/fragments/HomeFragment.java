@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment {
         setCount();
 
 
-
         return view;
     }
     private void getSubject(){
@@ -70,7 +69,6 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot snapshot1:snapshot.getChildren()){
                     Subject subject=snapshot1.getValue(Subject.class);
                     subjects.add(subject);
-                    System.out.println(subject.getName()+"=====================");
 
                 }
                 ArrayList<BarEntry> barEntries = new ArrayList<>();
@@ -96,7 +94,6 @@ public class HomeFragment extends Fragment {
                         out1+=outName;
                     }
                     theDates.add(out1);
-                    System.out.println(out1+"=================");
 
                 }
 

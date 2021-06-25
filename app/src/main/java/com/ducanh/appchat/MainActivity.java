@@ -2,7 +2,9 @@ package com.ducanh.appchat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -30,6 +32,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.ducanh.appchat.activity.AddClassActivity;
+import com.ducanh.appchat.activity.GetRole;
 import com.ducanh.appchat.adapter.FargmentNavigationAdapter;
 import com.ducanh.appchat.fragments.ChatsFragment;
 import com.ducanh.appchat.fragments.UsersFragment;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     SQLiteHelper sqLiteHelper;
     List<Noti> notiList= new ArrayList<>();
     boolean check=true;
+    boolean role=false;
 
 
     @Override
@@ -86,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -112,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
         adapter=new FargmentNavigationAdapter(getSupportFragmentManager(),
                 FargmentNavigationAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
+
+        setRole();
+
+
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -174,6 +184,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.logout:
+                SharedPreferences sharedPreferences= this.getSharedPreferences("roleApp", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("role", false);
+                editor.apply();
+
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -259,6 +274,36 @@ public class MainActivity extends AppCompatActivity {
                     getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }
+    }
+    private void setRole(){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SharedPreferences sharedPreferences= getSharedPreferences("roleApp", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                User user=snapshot.getValue(User.class);
+                if (user.getRole().equals("admin")){
+                    editor.putBoolean("role", true);
+
+                }else  editor.putBoolean("role", false);
+                editor.apply();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+    public boolean getRole(){
+        SharedPreferences sharedPreferences= this.getSharedPreferences("roleApp", Context.MODE_PRIVATE);
+        if(sharedPreferences!= null) {
+            return sharedPreferences.getBoolean("role", false);
+        }else return false;
     }
 
 }

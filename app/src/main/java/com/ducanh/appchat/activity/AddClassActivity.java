@@ -36,7 +36,6 @@ public class AddClassActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//
                 FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
                 DatabaseReference classRef=FirebaseDatabase.getInstance().getReference("Class")
                         .child(txtClassName.getText().toString()).child(firebaseUser.getUid());
@@ -48,6 +47,7 @@ public class AddClassActivity extends AppCompatActivity {
 
                 classRef.push().setValue(hashMap);
                 addToClassUser();
+                addToClassName();
 
 
             }
@@ -78,5 +78,13 @@ public class AddClassActivity extends AppCompatActivity {
         hashMap.put("id",txtClassName.getText().toString());
         classRef.push().setValue(hashMap);
 
+    }
+    private void addToClassName(){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference classRef=FirebaseDatabase.getInstance().getReference("ClassName");
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("name",txtClassName.getText().toString());
+
+        classRef.push().setValue(hashMap);
     }
 }
