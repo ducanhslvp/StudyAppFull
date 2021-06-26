@@ -4,11 +4,13 @@ public class ClassFeed {
     private String userID;
     private String content;
     private String type;
+    private String date;
 
-    public ClassFeed(String userID, String content, String type) {
+    public ClassFeed(String userID, String content, String type, String date) {
         this.userID = userID;
         this.content = content;
         this.type = type;
+        this.date = date;
     }
 
     public ClassFeed() {
@@ -36,5 +38,13 @@ public class ClassFeed {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

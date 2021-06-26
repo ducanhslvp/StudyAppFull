@@ -9,16 +9,17 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_margin="10dp"
         android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="386dp"
+        android:layout_height="37dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
             android:src="@mipmap/ic_launcher"
@@ -29,6 +30,38 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.051" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_on"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="31dp"
+            android:layout_marginLeft="-9dp"
+            android:layout_marginTop="22dp"
+            android:layout_toRightOf="@id/profile_image"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="visible"
+            app:civ_border_color="#4CAF50"
+            app:civ_border_width="5dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_off"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="31dp"
+            android:layout_marginLeft="-9dp"
+            android:layout_marginTop="22dp"
+            android:layout_toRightOf="@id/profile_image"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="visible"
+            app:civ_border_color="#A1A1A1"
+            app:civ_border_width="5dp" />
+
         <TextView
             android:id="@+id/txt_username"
             android:layout_width="wrap_content"
@@ -36,7 +69,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="-4dp"
             android:layout_marginEnd="52dp"
             android:layout_toEndOf="@+id/profile_image"
             android:text="TextView"
@@ -48,12 +81,31 @@
             app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="97dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="241dp"
+            android:layout_toEndOf="@+id/profile_image"
+            android:text="2021/12/8"
+            android:textColor="#686868"
+            android:textSize="10dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.045"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageButton
             android:id="@+id/btn_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="19dp"
             android:background="@drawable/ic_baseline_more_vert_24"
             android:backgroundTint="@color/black" />
 
@@ -62,7 +114,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:layout_width="377dp"
+        android:layout_width="362dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,19 +165,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="365dp"
+            android:layout_height="47dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/txt_subjectName"
-                android:layout_width="129dp"
+                android:layout_width="172dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="19dp"
+                android:layout_marginStart="11dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="63dp"

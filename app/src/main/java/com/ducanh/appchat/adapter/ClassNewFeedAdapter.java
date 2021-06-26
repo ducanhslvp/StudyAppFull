@@ -49,6 +49,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -86,7 +87,10 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
     @Override
     public void onBindViewHolder(@NonNull ClassNewFeedAdapter.ViewHolder holder, int position) {
         ClassFeed feed=listFeed.get(position);
-        setUser(holder.txtUsername,holder.profileImage,feed.getUserID());
+        setDate(feed.getDate(),holder.txtDate);
+
+
+        setUser(holder.txtUsername,holder.profileImage,feed.getUserID(),holder.imgOn, holder.imgOff);
 
         if (role)
         holder.btn_action.setOnClickListener(new View.OnClickListener() {
@@ -250,8 +254,8 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
     }
 
     public class  ViewHolder extends  RecyclerView.ViewHolder{
-        public CircleImageView profileImage;
-        public TextView txtUsername,txtContent,txtSubjectName;
+        public CircleImageView profileImage,imgOn,imgOff;
+        public TextView txtUsername,txtContent,txtSubjectName,txtDate;
         public ImageView imageContent;
         public VideoView videoView;
         public Button btnViewTest;
@@ -267,9 +271,42 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
             txtSubjectName=itemView.findViewById(R.id.txt_subjectName);
             btnViewTest=itemView.findViewById(R.id.btn_viewTest);
             btn_action=itemView.findViewById(R.id.btn_action);
+            txtDate=itemView.findViewById(R.id.txt_date);
+
+            imgOn=itemView.findViewById(R.id.img_on);
+            imgOff=itemView.findViewById(R.id.img_off);
         }
     }
-    private void setUser(TextView username,CircleImageView profileImage,String userID){
+    private void setOn(CircleImageView img){
+
+    }
+    private void setDate(String date,TextView txt){
+        Calendar c = Calendar.getInstance();
+        int hour, minute, second,day,month;
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        second = c.get(Calendar.SECOND);
+        day=c.get(Calendar.DAY_OF_MONTH);
+        month=c.get(Calendar.MONTH);
+
+        String result="";
+        String[] dates=date.split("/");
+        int minute2=Integer.parseInt(dates[0]);
+        int hour2=Integer.parseInt(dates[1]);
+        int day2=Integer.parseInt(dates[2]);
+        int month2=Integer.parseInt(dates[3]);
+        if (day==day2){
+            if (hour==hour2){
+                result=(minute-minute2) +" phút";
+            }else{
+                result=(hour-hour2) +" giờ";
+            }
+        }else{
+            result=(day-day2)+" ngày";
+        }
+        txt.setText(result);
+    }
+    private void setUser(TextView username,CircleImageView profileImage,String userID,CircleImageView imgOn,CircleImageView imgOff){
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -280,6 +317,17 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
                     if (user.getId().equals(userID)){
                         username.setText(user.getUsername());
                         Glide.with(context).load(user.getImageURL()).into(profileImage);
+
+                        if (user.getStatus().equals("online")){
+                            imgOn.setVisibility(View.VISIBLE);
+                            imgOff.setVisibility(View.GONE);
+                        }
+                        else{
+                            imgOn.setVisibility(View.GONE);
+                            imgOff.setVisibility(View.VISIBLE);
+                        }
+
+
                         break;
                     }
                 }
@@ -480,5 +528,4 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
         feed1=feed2;
         feed2=feedTG;
     }
-
 }

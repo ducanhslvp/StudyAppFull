@@ -175,7 +175,7 @@ public class AddFriendAdapter extends RecyclerView.Adapter<AddFriendAdapter.View
 
                             for (DataSnapshot snapshot1:snapshot.getChildren()) {
                                 ChatList chatList = snapshot1.getValue(ChatList.class);
-                                if (chatList.getId().equals(firebaseUser.getUid()))
+                                if (chatList.getId().equals(user.getId()))
                                     snapshot1.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {

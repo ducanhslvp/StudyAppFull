@@ -47,6 +47,7 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -162,10 +163,20 @@ public class ClassActivity extends AppCompatActivity {
         DatabaseReference classRef= FirebaseDatabase.getInstance().getReference("Class")
                 .child(className).child(firebaseUser.getUid());
 
+        Calendar c = Calendar.getInstance();
+        int hour, minute, second,day,month;
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        second = c.get(Calendar.SECOND);
+        day=c.get(Calendar.DAY_OF_MONTH);
+        month=c.get(Calendar.MONTH);
+        String date=minute+"/"+hour+"/"+day+"/"+month;
+
         HashMap<String,Object> hashMap=new HashMap<>();
         hashMap.put("userID",firebaseUser.getUid());
         hashMap.put("content",content);
         hashMap.put("type",type);
+        hashMap.put("date",date);
         classRef.push().setValue(hashMap);
 
     }
