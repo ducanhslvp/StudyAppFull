@@ -103,9 +103,11 @@
             android:padding="10dp"
             android:layout_margin="6dp"
             android:layout_marginLeft="15dp"
+
             android:background="@null"
-            android:hint="Mật khẩu..."
             android:drawableTint="#00FFFFFF"
+
+            android:hint="Mật khẩu..."
             android:inputType="textPassword" />
 
     </LinearLayout>

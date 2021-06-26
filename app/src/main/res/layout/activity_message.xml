@@ -79,8 +79,10 @@
                 android:layout_height="wrap_content">
                 <EditText
 
+                    android:background="@null"
+                    android:drawableTint="#00FFFFFF"
                     android:layout_width="250dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:id="@+id/text_send"
                     android:layout_marginLeft="10dp"
                     android:textSize="14dp"

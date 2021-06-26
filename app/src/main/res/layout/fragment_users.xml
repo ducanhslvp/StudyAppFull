@@ -16,6 +16,8 @@
         android:layout_height="50dp">
 
         <EditText
+            android:background="@null"
+            android:drawableTint="#00FFFFFF"
             android:padding="10dp"
             android:id="@+id/search_user"
             android:layout_width="match_parent"

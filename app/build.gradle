@@ -79,6 +79,8 @@ dependencies {
 
     implementation 'com.isseiaoki:simplecropview:1.1.4'
 
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
 
 
 }

@@ -44,10 +44,13 @@ import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptio
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
+import com.isseiaoki.simplecropview.CropImageView;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -91,6 +94,7 @@ public class AddSubjectActivity extends AppCompatActivity {
         btnBack=findViewById(R.id.btn_back);
         imageQuestion=findViewById(R.id.btn_image_question);
 
+
         Intent intent=new Intent();
         intent=getIntent();
         className=intent.getStringExtra("className");
@@ -100,7 +104,11 @@ public class AddSubjectActivity extends AppCompatActivity {
         imageQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    chooseImage();
+//                    chooseImage();
+//                    .setAspectRatio(1,1)
+                CropImage.activity()
+                        .start(AddSubjectActivity.this);
+
 //                dispatchTakePictureIntent();
             }
         });
@@ -195,6 +203,9 @@ public class AddSubjectActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
 
     }
     public void setSpinner(){
@@ -307,15 +318,17 @@ public class AddSubjectActivity extends AppCompatActivity {
 //        }
 
 
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK)
         {
-            Uri imageUri=data.getData();
+            CropImage.ActivityResult result=CropImage.getActivityResult(data);
+            Uri imageUri=result.getUri();
+//            Uri imageUri=data.getData();
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.println("chay qua day======================");
             detect();
         }
     }
@@ -367,7 +380,8 @@ public class AddSubjectActivity extends AppCompatActivity {
                 for (FirebaseVisionText.Element element: line.getElements()) {
                     String elementText = element.getText();
 
-                    if (elementText.equalsIgnoreCase("Question")){
+                    if (elementText.equalsIgnoreCase("Question") || elementText.equalsIgnoreCase("Cau") ||
+                            elementText.equalsIgnoreCase("Câu")){
                         question=lineText;
                     }
                     if (elementText.equals("A.")){
@@ -410,12 +424,23 @@ public class AddSubjectActivity extends AppCompatActivity {
     private void submitFeed(String content,String type){
         FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference classRef= FirebaseDatabase.getInstance().getReference("Class")
-                .child(className).child(firebaseUser.getUid());
+                .child(className);
+
+        Calendar c = Calendar.getInstance();
+        int hour, minute, second,day,month;
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        second = c.get(Calendar.SECOND);
+        day=c.get(Calendar.DAY_OF_MONTH);
+        month=c.get(Calendar.MONTH);
+        String date=minute+"/"+hour+"/"+day+"/"+month;
 
         HashMap<String,Object> hashMap=new HashMap<>();
         hashMap.put("userID",firebaseUser.getUid());
         hashMap.put("content",content);
         hashMap.put("type",type);
+        hashMap.put("date",date);
+
         classRef.push().setValue(hashMap);
 
     }

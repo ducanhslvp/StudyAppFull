@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,12 +63,22 @@ public class ConfirmJoinClassAdapter extends RecyclerView.Adapter<ConfirmJoinCla
             public void onClick(View v) {
                 FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
                 DatabaseReference classRef=FirebaseDatabase.getInstance().getReference("Class")
-                        .child(className).child(user.getId());
+                        .child(className);
+
+                Calendar c = Calendar.getInstance();
+                int hour, minute, second,day,month;
+                hour = c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
+                second = c.get(Calendar.SECOND);
+                day=c.get(Calendar.DAY_OF_MONTH);
+                month=c.get(Calendar.MONTH);
+                String date=minute+"/"+hour+"/"+day+"/"+month;
 
                 HashMap<String,Object> hashMap=new HashMap<>();
                 hashMap.put("userID",user.getId());
                 hashMap.put("content","Đã vào lớp!");
                 hashMap.put("type","text");
+                hashMap.put("date",date);
 
                 classRef.push().setValue(hashMap);
                 addToClassUser(user.getId());

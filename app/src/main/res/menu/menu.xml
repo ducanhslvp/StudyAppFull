@@ -14,8 +14,4 @@
         android:id="@+id/translate"
         android:title="Dịch ngôn ngữ"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/addClass"
-        android:title="Thêm lớp"
-        app:showAsAction="never"/>
 </menu>

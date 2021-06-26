@@ -16,7 +16,7 @@
         android:layout_margin="5dp"
         android:textSize="20dp"
         android:layout_height="wrap_content"
-        android:text="MÔN HỌC" />
+        android:text="BÀI KIỂM TRA" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_margin="2dp"
@@ -30,13 +30,15 @@
             android:id="@+id/edit_subjectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Tên môn học..."
+            android:hint="Tên bài..."
             android:textSize="16dp"
             android:ems="10"
+            android:background="@null"
+            android:drawableTint="#00FFFFFF"
             android:inputType="textEmailAddress" />
 
         <Button
-            android:text="Thêm môn"
+            android:text="Thêm bài"
             android:textColor="@color/white"
             android:background="@drawable/radius_btn"
             android:backgroundTint="@color/toolbar"
@@ -123,6 +125,7 @@
                 android:layout_height="250dp"
                 android:ems="10"
                 android:hint="Câu hỏi..."
+
                 android:inputType="textMultiLine" />
 
             <ImageButton
@@ -153,6 +156,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Đáp án B"
+
 
             android:inputType="textEmailAddress" />
         <EditText

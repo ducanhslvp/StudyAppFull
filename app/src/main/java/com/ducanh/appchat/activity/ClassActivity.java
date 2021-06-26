@@ -161,7 +161,7 @@ public class ClassActivity extends AppCompatActivity {
     private void submitFeed(String content,String type){
         FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference classRef= FirebaseDatabase.getInstance().getReference("Class")
-                .child(className).child(firebaseUser.getUid());
+                .child(className);
 
         Calendar c = Calendar.getInstance();
         int hour, minute, second,day,month;
@@ -182,7 +182,7 @@ public class ClassActivity extends AppCompatActivity {
     }
     private void getClassNewFeed(){
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-        reference=FirebaseDatabase.getInstance().getReference("Class").child(className).child(firebaseUser.getUid());
+        reference=FirebaseDatabase.getInstance().getReference("Class").child(className);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -480,5 +480,24 @@ public class ClassActivity extends AppCompatActivity {
         if(sharedPreferences!= null) {
             return sharedPreferences.getBoolean("role", false);
         }else return false;
+    }
+
+    private  void status(String status){
+        reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        HashMap<String, Object> hashMap=new HashMap<>();
+        hashMap.put("status",status);
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 }

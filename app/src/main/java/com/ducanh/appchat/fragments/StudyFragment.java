@@ -1,6 +1,8 @@
 package com.ducanh.appchat.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 
@@ -77,13 +79,18 @@ public class StudyFragment extends Fragment {
 
 
         btnAdd=view.findViewById(R.id.fab_add);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getContext(), AddSubjectActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (getRole()){
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(getContext(), AddSubjectActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }else {
+            btnAdd.setVisibility(View.GONE);
+        }
+
         btnAddNoti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,5 +132,11 @@ public class StudyFragment extends Fragment {
             }
         });
 
+    }
+    public boolean getRole(){
+        SharedPreferences sharedPreferences=getActivity().getSharedPreferences("roleApp", Context.MODE_PRIVATE);
+        if(sharedPreferences!= null) {
+            return sharedPreferences.getBoolean("role", false);
+        }else return false;
     }
 }

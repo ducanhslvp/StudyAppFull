@@ -32,7 +32,7 @@
             android:layout_marginLeft="10dp"
             android:background="@null"
             android:drawableTint="#00FFFFFF"
-            android:hint="search" />
+            android:hint="Tìm kiếm..." />
 
     </LinearLayout>
 

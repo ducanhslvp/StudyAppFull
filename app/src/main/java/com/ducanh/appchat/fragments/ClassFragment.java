@@ -1,6 +1,8 @@
 package com.ducanh.appchat.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.ducanh.appchat.R;
 import com.ducanh.appchat.activity.AddClassActivity;
@@ -24,6 +27,7 @@ import com.ducanh.appchat.adapter.AddFriendAdapter;
 import com.ducanh.appchat.adapter.ClassAdapter;
 import com.ducanh.appchat.model.ChatList;
 import com.ducanh.appchat.model.Class;
+import com.ducanh.appchat.model.ClassFeed;
 import com.ducanh.appchat.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +40,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class ClassFragment extends Fragment {
@@ -60,7 +66,6 @@ public class ClassFragment extends Fragment {
         btnAdd=view.findViewById(R.id.fab_add);
 
 
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -79,8 +84,11 @@ public class ClassFragment extends Fragment {
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(getContext(), AddClassActivity.class);
-                    startActivity(intent);
+//                    Intent intent=new Intent(getContext(), AddClassActivity.class);
+//                    startActivity(intent);
+
+                    addClassDialog();
+
                 }
             });
         }else{
@@ -107,6 +115,72 @@ public class ClassFragment extends Fragment {
 
 
         return  view;
+    }
+    public void addClassDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.dialog_edit_feed, null);
+        final EditText content = (EditText) alertLayout.findViewById(R.id.edit_feed);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Thêm lớp mới");
+        alert.setView(alertLayout);
+        alert.setCancelable(false);
+        alert.setNegativeButton("Quay lại", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getContext(), "Quay lại", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.setPositiveButton("Thêm", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseReference classRef=FirebaseDatabase.getInstance().getReference("Class")
+                        .child(content.getText().toString());
+
+                Calendar c = Calendar.getInstance();
+                int hour, minute, second,day,month;
+                hour = c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
+                second = c.get(Calendar.SECOND);
+                day=c.get(Calendar.DAY_OF_MONTH);
+                month=c.get(Calendar.MONTH);
+                String date=minute+"/"+hour+"/"+day+"/"+month;
+
+                HashMap<String,Object> hashMap=new HashMap<>();
+                hashMap.put("userID",firebaseUser.getUid());
+                hashMap.put("content","Đã tạo lớp!");
+                hashMap.put("type","text");
+                hashMap.put("date",date);
+
+                classRef.push().setValue(hashMap);
+                addToClassUser(content.getText().toString());
+                addToClassName(content.getText().toString());
+
+            }
+        });
+        AlertDialog dialog = alert.create();
+        dialog.show();
+    }
+    private void addToClassUser(String className){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference classRef=FirebaseDatabase.getInstance().getReference("ClassUser")
+                .child(firebaseUser.getUid());
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("id",className);
+        classRef.push().setValue(hashMap);
+
+    }
+    private void addToClassName(String className){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference classRef=FirebaseDatabase.getInstance().getReference("ClassName");
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("name",className);
+
+        classRef.push().setValue(hashMap);
     }
     private void searchClassFromAllClass(String s){
         s=s.toUpperCase();

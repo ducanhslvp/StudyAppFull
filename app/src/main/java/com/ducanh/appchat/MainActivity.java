@@ -201,10 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,TranslateActivity.class));
                 finish();
                 return true;
-            case R.id.addClass:
-                startActivity(new Intent(MainActivity.this, AddClassActivity.class));
-                finish();
-                return true;
 
         }
         return false;

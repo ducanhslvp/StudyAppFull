@@ -1,5 +1,6 @@
 package com.ducanh.appchat.adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.le.ScanSettings;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -50,6 +52,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -105,7 +108,7 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
                 holder.btn_action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openDialogActionMe(feed,myUserID);
+                        openDialogActionMe(feed,myUserID,feed.getContent());
                     }
                 });
 
@@ -316,7 +319,7 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
                     user=snapshot1.getValue(User.class);
                     if (user.getId().equals(userID)){
                         username.setText(user.getUsername());
-                        Glide.with(context).load(user.getImageURL()).into(profileImage);
+                        Glide.with(context.getApplicationContext()).load(user.getImageURL()).into(profileImage);
 
                         if (user.getStatus().equals("online")){
                             imgOn.setVisibility(View.VISIBLE);
@@ -401,7 +404,7 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    private void openDialogActionMe(ClassFeed feed,String userID)  {
+    private void openDialogActionMe(ClassFeed feed,String userID,String content)  {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("");
@@ -416,6 +419,8 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
                     }
                     case 1:{
 
+                        editDialog(feed,content);
+
                         break;
                     }
                 }
@@ -426,6 +431,34 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+    public void editDialog(ClassFeed feed,String oldContent) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View alertLayout = inflater.inflate(R.layout.dialog_edit_feed, null);
+        final EditText content = (EditText) alertLayout.findViewById(R.id.edit_feed);
+        content.setText(oldContent);
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setTitle("Sửa bài viết");
+        alert.setView(alertLayout);
+        alert.setCancelable(false);
+        alert.setNegativeButton("Quay lại", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context, "Quay lại", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.setPositiveButton("Sửa", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editFeed(feed,content.getText().toString());
+            }
+        });
+        AlertDialog dialog = alert.create();
+        dialog.show();
+    }
+
     private void openDialogActionFriend(int position,String userID)  {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("");
@@ -450,16 +483,40 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-    private void deleteFeed(ClassFeed feed,String userID){
-
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Class").child(className).child(userID);
+    private void editFeed(ClassFeed feed,String content){
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Class").child(className);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snapshot1:snapshot.getChildren()) {
                     ClassFeed classFeed = snapshot1.getValue(ClassFeed.class);
 
+                    if (classFeed.getContent().equals(feed.getContent())) {
+                        HashMap<String, Object> map=new HashMap<>();
+                        map.put("content",content);
+                        snapshot1.getRef().updateChildren(map);
+                        break;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    private void deleteFeed(ClassFeed feed,String userID){
+
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Class").child(className);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1:snapshot.getChildren()) {
+                    ClassFeed classFeed = snapshot1.getValue(ClassFeed.class);
 
                         if (classFeed.getContent().equals(feed.getContent())) {
                             snapshot1.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
