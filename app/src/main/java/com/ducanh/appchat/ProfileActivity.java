@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -20,6 +22,7 @@ import com.ducanh.appchat.model.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,11 +32,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     StorageReference storageReference;
     private static final  int IMAGE_REQUEST=1;
+    private final int PICK_IMAGE_REQUEST = 71;
     private Uri imageUri;
     private StorageTask uploadTask;
 
@@ -72,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
                     imageProfile.setImageResource(R.mipmap.ic_launcher);
 
                 } else{
-                    Glide.with(ProfileActivity.this).load(user.getImageURL()).into(imageProfile);
+                    Glide.with(getBaseContext()).load(user.getImageURL()).into(imageProfile);
                 }
             }
 
@@ -85,7 +92,8 @@ public class ProfileActivity extends AppCompatActivity {
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openImage();
+//                openImage();
+                chooseImage();
             }
 
         });
@@ -98,21 +106,27 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-    private void openImage() {
-        Intent intent=new Intent();
+    private void chooseImage() {
+        Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,IMAGE_REQUEST);
-
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+//    private void openImage() {
+//        Intent intent=new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intent,IMAGE_REQUEST);
+//
+//    }
     private String getFileExtension(Uri uri){
         ContentResolver conentResolver=ProfileActivity.this.getContentResolver();
         MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
         return  mimeTypeMap.getExtensionFromMimeType(conentResolver.getType(uri));
     }
-    private  void uploadImage(){
+    private void uploadImage(){
         final ProgressDialog pd=new ProgressDialog(ProfileActivity.this);
-        pd.setMessage("Uploading");
+        pd.setMessage("Đang tải lên");
         pd.show();
 
         if (imageUri !=null){
@@ -159,19 +173,31 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        System.out.println("========================="+filePath);
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode==IMAGE_REQUEST && requestCode==RESULT_OK && data!=null
+//            && data.getData()!=null){
+//            imageUri =data.getData();
+//            filePath = data.getData();
+//            uploadImage2();
+//            if (uploadTask!=null && uploadTask.isInProgress()){
+//                Toast.makeText(ProfileActivity.this,"Upload in preogress",Toast.LENGTH_SHORT).show();
+//            }else {
+//                uploadImage();
+//            }
+//        }
+//    }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        System.out.println("Co chay vao cai nay+++++++++++++++++");
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==IMAGE_REQUEST && requestCode==RESULT_OK && data!=null
-            && data.getData()!=null){
-            imageUri =data.getData();
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            imageUri=data.getData();
             uploadImage();
-            if (uploadTask!=null && uploadTask.isInProgress()){
-                Toast.makeText(ProfileActivity.this,"Upload in preogress",Toast.LENGTH_SHORT).show();
-            }else {
-                uploadImage();
-            }
+
         }
     }
 }

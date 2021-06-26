@@ -34,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Đăng ký");
+        getSupportActionBar().setTitle("ĐĂNG KÝ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         username=findViewById(R.id.username);
@@ -80,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                     hashMap.put("imageURL","default");
                     hashMap.put("status","offline");
                     hashMap.put("search",username.toLowerCase());
+                    hashMap.put("role","user");
 
                     reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

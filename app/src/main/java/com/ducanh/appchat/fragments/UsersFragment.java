@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.ducanh.appchat.R;
+import com.ducanh.appchat.adapter.AddFriendAdapter;
 import com.ducanh.appchat.adapter.UserAdapter;
+import com.ducanh.appchat.model.ChatList;
 import com.ducanh.appchat.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,13 +30,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public class UsersFragment extends Fragment {
     private RecyclerView recyclerView;
-    private UserAdapter userAdapter;
+    private AddFriendAdapter adapter;
     private List<User> users;
     EditText searchUser;
+    DatabaseReference reference;
+    private List<ChatList> userList;
 
 
     @Override
@@ -66,28 +69,29 @@ public class UsersFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         users=new ArrayList<>();
+        userList=new ArrayList<>();
         readUsers();
         return view;
     }
     private void searchUserVoid(String s){
         FirebaseUser firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
-        Query query=FirebaseDatabase.getInstance().getReference("Users").orderByChild("username")
+        Query query=FirebaseDatabase.getInstance().getReference("Users").orderByChild("search")
                 .startAt(s).endAt(s+"\uf0ff");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!searchUser.getText().toString().equals("")){
+                if (!searchUser.getText().toString().equals("")) {
                     users.clear();
-                    for (DataSnapshot snapshot1:snapshot.getChildren()){
-                        User user=snapshot1.getValue(User.class);
-                        assert  user!=null;
-                        if (!user.getId().equals(firebaseUser.getUid())){
+                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                        User user = snapshot1.getValue(User.class);
+                        assert user != null;
+                        if (!user.getId().equals(firebaseUser.getUid())) {
                             users.add(user);
                         }
                     }
-                    userAdapter=new UserAdapter(getContext(),users,false);
-                    recyclerView.setAdapter(userAdapter);
-                }else  readUsers();
+                    adapter=new AddFriendAdapter(getContext(),users,true);
+                    recyclerView.setAdapter(adapter);
+                } else  readUsers();
             }
 
             @Override
@@ -97,23 +101,70 @@ public class UsersFragment extends Fragment {
         });
     }
     private void readUsers(){
+//        final FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("AddFriends");
+//
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                users.clear();
+//                for (DataSnapshot snapshot1: snapshot.getChildren()){
+//                    User user=snapshot1.getValue(User.class);
+//
+////                    assert user!=null;
+////                    if (!user.getId().equals(firebaseUser.getUid())){
+////                        users.add(user);
+////                    }
+//                    users.add(user);
+//                }
+////                System.out.println(users.get(0).getImageURL()+"============================image");
+//                adapter=new AddFriendAdapter(getContext(),users,false);
+//                recyclerView.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
         final FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
-
+        reference=FirebaseDatabase.getInstance().getReference("AddFriends").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                users.clear();
-                for (DataSnapshot snapshot1: snapshot.getChildren()){
-                    User user=snapshot1.getValue(User.class);
+                userList.clear();
+                for (DataSnapshot snapshot1:snapshot.getChildren()) {
+                    ChatList chatList = snapshot1.getValue(ChatList.class);
+                    userList.add(chatList);
+                    System.out.println(chatList.getId()+"chat lit============");
+                }
+                chatList();
+            }
 
-                    assert user!=null;
-                    if (!user.getId().equals(firebaseUser.getUid())){
-                        users.add(user);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    private void chatList(){
+        users=new ArrayList<>();
+        reference=FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                users.clear();
+                for (DataSnapshot snapshot1:snapshot.getChildren()){
+                    User user=snapshot1.getValue(User.class);
+                    for (ChatList chatList:userList){
+                        if (user.getId().equals(chatList.getId())){
+                            users.add(user);
+                        }
                     }
                 }
-                userAdapter=new UserAdapter(getContext(),users,false);
-                recyclerView.setAdapter(userAdapter);
+                adapter=new AddFriendAdapter(getContext(),users,false);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override

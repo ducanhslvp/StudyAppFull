@@ -35,7 +35,8 @@ public class ChatHomeFragment extends Fragment {
                 ViewPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_launcher_background);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_baseline_chat_24);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_baseline_supervised_user_circle_24);
         return view;
     }
 }

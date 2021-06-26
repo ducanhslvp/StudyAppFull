@@ -4,18 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".fragments.ChatHomeFragment">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <LinearLayout
+        android:layout_margin="1dp"
+        android:background="@drawable/radius_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabBackground="@color/red2"
-        app:tabSelectedTextColor="@color/white"
-        app:tabIndicatorHeight="5dp"
-        app:tabIndicatorColor="@color/white"
-        app:tabTextColor="@color/white"/>
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.tabs.TabLayout
+            android:background="@drawable/radius_2"
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:tabBackground="@color/lightDark"
+            app:tabSelectedTextColor="@color/cardview_dark_background"
+            app:tabIndicatorHeight="60dp"
+            app:tabIndicatorColor="@color/black"
+            app:tabTextColor="#707070"/>
+    </LinearLayout>
+
 
 
     <androidx.viewpager.widget.ViewPager

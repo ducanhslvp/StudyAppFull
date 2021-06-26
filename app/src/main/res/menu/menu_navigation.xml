@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Home"
+    <item
         android:id="@+id/menu_home"
-        android:icon="@drawable/ic_launcher_background"
-        />
-    <item android:title="Search"
+        android:icon="@drawable/home"
+        android:title="TRANG CHỦ" />
+    <item android:title="HỌC TẬP"
         android:id="@+id/menu_oke"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/study"
         />
-    <item android:title="CHAT"
+    <item android:title="Lớp"
+        android:id="@+id/menu_class"
+        android:icon="@drawable/study"
+        />
+    <item
+        android:title="NHẮN TIN"
         android:id="@+id/menu_chat"
-        android:icon="@drawable/ic_baseline_send_24"
+        android:icon="@drawable/chat"
         />
 
 </menu>

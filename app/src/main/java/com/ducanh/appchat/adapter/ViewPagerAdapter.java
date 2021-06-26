@@ -31,13 +31,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return numPage;
     }
 
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0:return "CHAT";
-            case 1:return "USER";
-            default:return "CHAT";
-        }
-    }
+//    @Nullable
+//    @Override
+//    public CharSequence getPageTitle(int position) {
+//        switch (position){
+//            case 0:return "CHAT";
+//            case 1:return "USER";
+//            default:return "CHAT";
+//        }
+//    }
 }

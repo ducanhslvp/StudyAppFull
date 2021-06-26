@@ -1,6 +1,8 @@
 package com.ducanh.appchat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,27 +18,49 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText email,password;
-    private Button btnLogin;
     FirebaseAuth auth;
     DatabaseReference reference;
+    private Button btnRegister,btnLogin;
+    FirebaseUser firebaseUser;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser!=null){
+            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar=findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Đăng nhập");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        Toolbar toolbar=findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle("ĐĂNG NHẬP");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         email=findViewById(R.id.email);
         password=findViewById(R.id.password);
         btnLogin=findViewById(R.id.btn_login);
+        btnRegister=findViewById(R.id.btn_register);
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+            }
+        });
 
         auth=FirebaseAuth.getInstance();
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -69,4 +93,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }

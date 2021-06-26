@@ -5,31 +5,37 @@
     android:padding="8dp">
 
     <RelativeLayout
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:background="@drawable/background_right">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:id="@+id/profile_image"/>
+            android:layout_alignParentRight="true"
+            android:visibility="gone" />
 
         <TextView
+            android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/message"
-            android:layout_marginLeft="25dp"
             android:padding="8dp"
-            android:text="helththththlo"
-            android:textSize="18dp"
+            android:text="test chat"
             android:textColor="@color/white"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="25dp"
-            android:background="@drawable/background_right"
+            android:gravity="right"
 
-            android:layout_alignParentRight="true" />
+            android:textSize="16dp" />
+
+        <ImageView
+            android:background="@drawable/radius_2"
+            android:layout_margin="5dp"
+            android:visibility="gone"
+            android:id="@+id/image_mesage"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
 
     </RelativeLayout>
 
