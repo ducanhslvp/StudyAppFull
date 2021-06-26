@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppChat">
-        <activity android:name=".activity.ConfirmUserJoinClassActivity"></activity>
+        <activity android:name=".dialog.ClassActionDialog"></activity>
+        <activity android:name=".activity.ConfirmUserJoinClassActivity" />
         <activity android:name=".activity.WebViewActivity" />
         <activity android:name=".activity.ClassActivity" />
         <activity android:name=".activity.AddClassActivity" />

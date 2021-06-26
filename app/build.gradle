@@ -77,6 +77,8 @@ dependencies {
     implementation 'com.github.kk121:File-Loader:1.2'
     implementation "com.pdfview:pdfview-android:1.0.0"
 
+    implementation 'com.isseiaoki:simplecropview:1.1.4'
+
 
 
 }

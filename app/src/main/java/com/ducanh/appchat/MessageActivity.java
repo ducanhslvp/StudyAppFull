@@ -76,6 +76,7 @@ public class MessageActivity extends AppCompatActivity {
 
     APIService apiService;
     boolean notify=false;
+    User user1=new User();
 
     StorageReference storageReference;
     private static final  int IMAGE_REQUEST=1;
@@ -118,8 +119,14 @@ public class MessageActivity extends AppCompatActivity {
         reference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
         intent=getIntent();
-        User user1=(User) intent.getSerializableExtra("user");
-        userId=user1.getId();
+        user1=(User) intent.getSerializableExtra("user");
+        if (user1!=null)
+            userId=user1.getId();
+        else{
+            userId=intent.getStringExtra("userID");
+            getUserByUserID(userId);
+        }
+
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +151,7 @@ public class MessageActivity extends AppCompatActivity {
                     profileImage.setImageResource(R.mipmap.ic_launcher);
 
                 } else{
-                    Glide.with(getBaseContext()).load(user.getImageURL()).into(profileImage);
+                    Glide.with(getBaseContext()).load(user1.getImageURL()).into(profileImage);
                 }
                 readMessages(firebaseUser.getUid(),userId,user1.getImageURL());
             }
@@ -174,13 +181,29 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("message",message);
 
         reference.child("Chats").push().setValue(hashMap);
+//        DatabaseReference chatRef=FirebaseDatabase.getInstance().getReference("ListChat")
+//                .child(firebaseUser.getUid()).child(userId);
+//        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (!snapshot.exists()){
+//                    chatRef.child("id").setValue(firebaseUser.getUid());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+        //day vao list chat
         DatabaseReference chatRef=FirebaseDatabase.getInstance().getReference("ListChat")
                 .child(firebaseUser.getUid()).child(userId);
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()){
-                    chatRef.child("id").setValue(firebaseUser.getUid());
+                    chatRef.child("id").setValue(userId);
                 }
             }
 
@@ -189,6 +212,25 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+        DatabaseReference chatRef2=FirebaseDatabase.getInstance().getReference("ListChat")
+                .child(userId).child(firebaseUser.getUid());
+        chatRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()){
+                    chatRef2.child("id").setValue(firebaseUser.getUid());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
         final String msg=message;
         reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
@@ -365,5 +407,26 @@ public class MessageActivity extends AppCompatActivity {
             uploadImage();
 
         }
+    }
+    private void getUserByUserID(String userID){
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user=new User();
+                for (DataSnapshot snapshot1:snapshot.getChildren()){
+                    user=snapshot1.getValue(User.class);
+                    if (user.getId().equals(userID)){
+                        user1=user;
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

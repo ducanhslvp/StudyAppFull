@@ -180,7 +180,7 @@ public class ClassActivity extends AppCompatActivity {
                     ClassFeed feed = snapshot1.getValue(ClassFeed.class);
                     listClassFeed.add(feed);
                 }
-                classNewFeedAdapter=new ClassNewFeedAdapter(getBaseContext(),listClassFeed);
+                classNewFeedAdapter=new ClassNewFeedAdapter(ClassActivity.this,listClassFeed,className);
                 recyclerView.setAdapter(classNewFeedAdapter);
             }
 

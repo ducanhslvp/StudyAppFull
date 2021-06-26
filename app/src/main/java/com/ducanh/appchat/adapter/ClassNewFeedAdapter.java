@@ -2,7 +2,9 @@ package com.ducanh.appchat.adapter;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -24,13 +26,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.ducanh.appchat.AddSubjectActivity;
+import com.ducanh.appchat.MainActivity;
+import com.ducanh.appchat.MessageActivity;
 import com.ducanh.appchat.R;
 import com.ducanh.appchat.TestActivity;
 import com.ducanh.appchat.activity.ClassActivity;
 import com.ducanh.appchat.activity.WebViewActivity;
 import com.ducanh.appchat.model.ChatList;
+import com.ducanh.appchat.model.Class;
 import com.ducanh.appchat.model.ClassFeed;
 import com.ducanh.appchat.model.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +48,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -50,16 +59,21 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
 
     private Context context;
     private List<ClassFeed> listFeed;
+    private String className;
     LayoutInflater inflater;
 
     FirebaseUser firebaseUser;
     ProgressDialog progressDialog;
     private boolean role;
+    private String myUserID;
 
-    public ClassNewFeedAdapter(Context context, List<ClassFeed> listFeed) {
+    public ClassNewFeedAdapter(Context context, List<ClassFeed> listFeed,String className) {
         this.context = context;
         this.listFeed = listFeed;
+        sort();
         this.role=getRole();
+        this.className=className;
+        this.myUserID=FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @NonNull
@@ -79,9 +93,29 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
             @Override
             public void onClick(View v) {
 
+                openDialogActionAdmin(feed,feed.getUserID(),position);
             }
         });
-        else holder.btn_action.setVisibility(View.GONE);
+        else {
+            if (feed.getUserID().equals(myUserID)){
+                holder.btn_action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialogActionMe(feed,myUserID);
+                    }
+                });
+
+            }else{
+                holder.btn_action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openDialogActionFriend(position,feed.getUserID());
+                    }
+                });
+
+            }
+
+        }
 
         if (feed.getType().equals("text")){
             holder.txtContent.setVisibility(View.VISIBLE);
@@ -279,6 +313,172 @@ public class ClassNewFeedAdapter extends RecyclerView.Adapter<ClassNewFeedAdapte
         AlertDialog dialog = alert.create();
         dialog.show();
         dialog.setCanceledOnTouchOutside(true);
+    }
+    private void openDialogActionAdmin(ClassFeed feed,String userID,int position)  {
+//        LoginAccountDialog dialog_sucess = new LoginAccountDialog (this,LoginActivity.this) ;
+//        dialog_sucess.show();
+//        dialog_sucess.setCancelable(false);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("");
+        String[] action={"Xóa","Ghim","Nhắn tin"};
+
+        builder.setItems(action, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int d=0;
+                switch (which){
+                    case 0:{
+                        deleteFeed(feed,userID);
+                        break;
+                    }
+                    case 1:{
+                        pinFeed(feed,position);
+                        break;
+                    }
+                    case 2:{
+                        Intent intent=new Intent(context, MessageActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("userID", userID);
+
+                        context.startActivity(intent);
+
+                        break;
+                    }
+                }
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void openDialogActionMe(ClassFeed feed,String userID)  {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("");
+        String[] action={"Xóa","Sửa"};
+        builder.setItems(action, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0:{
+                        deleteFeed(feed,userID);
+                        break;
+                    }
+                    case 1:{
+
+                        break;
+                    }
+                }
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void openDialogActionFriend(int position,String userID)  {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("");
+        String[] action={"Nhắn tin"};
+        builder.setItems(action, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0:{
+                        Intent intent=new Intent(context, MessageActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("userID", userID);
+                        context.startActivity(intent);
+
+                        break;
+                    }
+                }
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteFeed(ClassFeed feed,String userID){
+
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Class").child(className).child(userID);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1:snapshot.getChildren()) {
+                    ClassFeed classFeed = snapshot1.getValue(ClassFeed.class);
+
+
+                        if (classFeed.getContent().equals(feed.getContent())) {
+                            snapshot1.getRef().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    new ClassNewFeedAdapter(context, listFeed, className);
+                                }
+                            });
+                            break;
+                        }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void sort(){
+        List<ClassFeed> listFeed2=new ArrayList<>();
+        for (int i=listFeed.size()-1;i>=0;i--)
+            listFeed2.add(listFeed.get(i));
+        listFeed=listFeed2;
+    }
+    private void pinFeed(ClassFeed feed,int position){
+        System.out.println("chay toi pin feed======================");
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Class").child(className).child(feed.getUserID());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1:snapshot.getChildren()) {
+                    ClassFeed classFeed = snapshot1.getValue(ClassFeed.class);
+
+
+                    if (classFeed.getContent().equals(feed.getContent())) {
+                        System.out.println("======================"+listFeed.get(position).getContent());
+//                        swap(listFeed.get(0),listFeed.get(position));
+
+                        List<ClassFeed> listFeed2=new ArrayList<>();
+                        listFeed2.add(feed);
+                        for (int i=listFeed.size()-1;i>=0;i--)
+                            if (i!=position)
+                                listFeed2.add(listFeed.get(i));
+                        System.out.println("======================"+listFeed2.get(0).getContent());
+                        listFeed=listFeed2;
+                        new ClassNewFeedAdapter(context, listFeed2, className);
+
+                        break;
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void swap(ClassFeed feed1, ClassFeed feed2){
+        ClassFeed feedTG=feed1;
+        feed1=feed2;
+        feed2=feedTG;
     }
 
 }
